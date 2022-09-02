@@ -10,6 +10,9 @@ This addon does:
 - extends Bard text field
 - extends Input[type="text"] field
 
+## Demo
+![Demo animation](https://gitlab.appswithlove.net/statamic/statamic-translate-me/-/blob/master/demo.gif "Demo")
+
 ### Installation
 
 See also: https://gitlab.appswithlove.net/help/user/packages/composer_repository/index#install-a-composer-package
