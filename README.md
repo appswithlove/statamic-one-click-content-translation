@@ -11,7 +11,8 @@ This addon does:
 - extends Input[type="text"] field
 
 ## Demo
-![Demo animation](https://gitlab.appswithlove.net/statamic/statamic-translate-me/-/blob/master/demo.gif "Demo")
+
+demo.gif
 
 ### Installation
 
@@ -46,7 +47,7 @@ Edit generated auth.json and add:
 And then add the addon to your project by running:
 
 ```bash
-composer require statamic/statamic-translate-me
+composer require appswithlove/statamic-translate-me
 php artisan vendor:publish --tag="statamic-translate-me-config"
 ```
 

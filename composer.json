@@ -1,5 +1,5 @@
 {
-    "name": "statamic/statamic-translate-me",
+    "name": "appswithlove/statamic-translate-me",
     "description": "The addon helps translate content in the CMS automatically",
     "keywords": ["statamic", "translate", "cms", "deepl", "laravel"],
     "minimum-stability": "dev",
