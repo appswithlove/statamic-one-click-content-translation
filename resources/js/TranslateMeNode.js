@@ -32,8 +32,6 @@ export default class TranslateMeNode extends Node {
       response.data.texts.forEach((text) => {
         event.dom.childNodes[text.index].innerHTML = text.html
       })
-
-      Statamic.$toast.success(__('Done'));
     }
 }
 

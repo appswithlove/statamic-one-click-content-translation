@@ -48,8 +48,6 @@ export default {
             texts: [{ 'index': 0, html: node.value }],
           })
           node.value = response.data.texts[0].html
-
-          Statamic.$toast.success(__('Done'));
         })
       })
     }
