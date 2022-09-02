@@ -1,0 +1,8 @@
+node_modules
+vendor
+mix-manifest.json
+.env
+
+# IDE settings
+.vscode
+.idea

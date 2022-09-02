@@ -1,0 +1,40 @@
+{
+    "name": "statamic/statamic-translate-me",
+    "description": "The addon helps translate content in the CMS automatically",
+    "keywords": ["statamic", "translate", "cms", "deepl", "laravel"],
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Apps with love AG",
+            "email": "support@appswithlove.com"
+        },
+        {
+            "name": "Brylin Oleksii",
+            "email": "brylin@moqod.com"
+        }
+    ],
+
+    "autoload": {
+        "psr-4": {
+            "Appswithlove\\StatamicTranslateMe\\": "src"
+        }
+    },
+    "extra": {
+        "statamic": {
+            "name": "Translate Me",
+            "description": "Translate Me addon"
+        },
+        "laravel": {
+            "providers": [
+                "Brylin\\TranslateMe\\ServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "deeplcom/deepl-php": "^0.4.0"
+    },
+    "require-dev": {
+        "statamic/cms": "~3.2.15 || ~3.3.0"
+    }
+}
