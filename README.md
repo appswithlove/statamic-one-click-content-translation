@@ -15,7 +15,7 @@ This addon does:
 You can search for this addon in the `Tools > Addons` section of the Statamic control panel and click **install**, or run the following command from your project root:
 
 ``` bash
-composer require brylin/translate-me
+composer require statamic/statamic-translate-me
 ```
 
 ## How to Use

@@ -3,6 +3,7 @@
     "description": "The addon helps translate content in the CMS automatically",
     "keywords": ["statamic", "translate", "cms", "deepl", "laravel"],
     "minimum-stability": "dev",
+    "type": "library",
     "authors": [
         {
             "name": "Apps with love AG",
