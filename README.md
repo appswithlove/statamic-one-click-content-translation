@@ -16,6 +16,7 @@ You can search for this addon in the `Tools > Addons` section of the Statamic co
 
 ``` bash
 composer require statamic/statamic-translate-me
+php artisan vendor:publish --tag="statamic-translate-me-config"
 ```
 
 ## How to Use

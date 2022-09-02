@@ -32,12 +32,12 @@ class TranslateMeController
     }
 
     private function translate(array $texts, string $fromLang, string $toLang) {
-        $authKey = config('translate-me.deepl_auth_key');
+        $authKey = config('statamic-translate-me.deepl_auth_key');
         $translator = new Translator($authKey);
 
         switch($toLang) {
             case 'en':
-                $toLang = config('translate-me.target_lang_for_en');
+                $toLang = config('statamic-translate-me.target_lang_for_en');
                 break;
         }
 
