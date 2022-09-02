@@ -27,7 +27,7 @@
         },
         "laravel": {
             "providers": [
-                "Brylin\\TranslateMe\\ServiceProvider"
+                "Appswithlove\\StatamicTranslateMe\\ServiceProvider"
             ]
         }
     },
