@@ -6,7 +6,7 @@
 import { translateMeRequest } from './api';
 import LangMixin from './LangMixin';
 
-const CSS_QUERY = 'input[type="text"]:not([readonly])';
+const CSS_QUERY = 'input[type="text"]:not([readonly]), textarea:not([readonly])';
 
 export default {
   mixins: [Fieldtype, LangMixin],

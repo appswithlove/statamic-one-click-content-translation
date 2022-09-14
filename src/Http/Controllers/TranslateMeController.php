@@ -3,7 +3,6 @@
 namespace Appswithlove\StatamicTranslateMe\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use DeepL\Translator;
 
 class TranslateMeController
@@ -14,7 +13,7 @@ class TranslateMeController
         $data = $request->all();
 
         $textStrings = [];
-        foreach($data['texts'] as &$text) {
+        foreach($data['texts'] as $text) {
             $textStrings[] = $text['html'];
         }
 
@@ -24,8 +23,10 @@ class TranslateMeController
             return response($error->getMessage(), 400);
         }
 
-        foreach($data['texts'] as $key => $text) {
-            $data['texts'][$key]['html'] = $translations[$key]->text;
+        $i = 0;
+        foreach($data['texts'] as $text) {
+            $data['texts'][$i]['html'] = $translations[$i]->text;
+            $i++;
         }
 
         return $data;
