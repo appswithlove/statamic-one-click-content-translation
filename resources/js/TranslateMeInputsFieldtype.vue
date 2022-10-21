@@ -24,7 +24,7 @@ export default {
         return;
       }
 
-      const parrentNode = this.$refs.node.closest('.publish-section-wrapper');
+      const parrentNode = this.$refs.node.closest('.publish-section-wrapper').parentElement;
       const inputNodes = parrentNode.querySelectorAll(CSS_QUERY);
       inputNodes.forEach(node => {
         const groupNode = node.closest('.form-group');
