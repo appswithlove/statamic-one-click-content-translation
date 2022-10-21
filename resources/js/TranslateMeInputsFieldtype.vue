@@ -48,6 +48,8 @@ export default {
             texts: [{ 'index': 0, html: node.value }],
           })
           node.value = response.data.texts[0].html
+          const inputEvent = new Event('input', { bubbles:true, cancelable: true });
+          node.dispatchEvent(inputEvent);
         })
       })
     }
