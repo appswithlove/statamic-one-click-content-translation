@@ -12,6 +12,10 @@ export default {
   mixins: [Fieldtype, LangMixin],
   mounted(){
     this.init();
+    const parentNode = this.parentNode();
+    parentNode.addEventListener('click', () => {
+      setTimeout(this.init(), 500);
+    })
   },
   watch: {
     currentLangHandle() {
@@ -24,7 +28,7 @@ export default {
         return;
       }
 
-      const parrentNode = this.$refs.node.closest('.publish-section-wrapper').parentElement;
+      const parrentNode = this.parentNode();
       const inputNodes = parrentNode.querySelectorAll(CSS_QUERY);
       inputNodes.forEach(node => {
         const groupNode = node.closest('.form-group');
@@ -52,6 +56,9 @@ export default {
           node.dispatchEvent(inputEvent);
         })
       })
+    },
+    parentNode () {
+      return this.$refs.node.closest('.publish-section-wrapper').parentElement;
     }
   }
 };
