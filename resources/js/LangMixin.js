@@ -20,7 +20,7 @@ export default {
       return this.currentLang?.name
     },
     tooltipText() {
-      return 'Translate to ' + this.titleCurentLang
+      return 'Translate'
     },
     defaultLang() {
       return this.sites.find(lang => lang.handle === 'default') || this.sites[0]

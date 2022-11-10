@@ -1,52 +1,62 @@
-.fa-les-mills {
-    /* use !important to prevent issues with browser extensions that change fonts */
-    font-family: 'icomoon' !important;
-    speak: never;
-    font-style: normal;
+.translate-me__btn.translate-me__btn--bard::after {
+    width: 100%;
+    height: 100%;
+    background-size: auto 70%;
+}
+.translate-me__btn.translate-me__btn--bard::before {
+   display: none;
+}
+.translate-me__btn {
+    height: 1.6em;
+    width: 1.6em;
+    padding: 0;
+    position: relative;
+
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.translate-me__btn:focus {
+    outline: none !important;
+}
+.translate-me__btn::before {
+    visibility: hidden;
+    opacity: 0;
+    display: inline-block;
+    content: attr(data-title);
+    white-space: nowrap;
+    position: absolute;
+    top: -27px;
+    background: #1c2e36;
+    border-radius: 3px;
+    padding: 4px 8px;
+    color: white;
+    left: 0;
+    z-index: 10;
     font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    line-height: 1;
-
-    /* Better Font Rendering =========== */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    font-size: 12px;
+    line-height: 17px;
+    transform: translateX(-50%);
+    margin-left: 50%;
+    transition: opacity 0.2s ease;
 }
-
-.fa-les-mills:before {
-    content: "\e900";
+.translate-me__btn:hover::before {
+    visibility: visible;
+    opacity: 1;
 }
-
-/* Class Type Styles */
-.les-mills-class {
-    text-transform: uppercase;
-    font-weight: bold;
-}
-
-.les-mills-class.bodyattack {
-    color: #FCC500;
-}
-
-.les-mills-class.bodybalance {
-    color: #b9d47d;
-}
-
-.les-mills-class.bodypump {
-    color: #ea4851;
-}
-
-.les-mills-class.bodyvive {
-    color: #752f8b;
-}
-
-.les-mills-class.cxworx {
-    color: #ED7402;
-}
-
-.les-mills-class.les-mills-core {
-    color: #444;
-}
-
-.les-mills-class.les-mills-tone {
-    color: #777;
+.translate-me__btn:after {
+    display: inline-block;
+    content: '';
+    background: no-repeat url("data:image/svg+xml,%3Csvg width='29' height='28' viewBox='0 0 29 28' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M23.7 11.002C23.5304 11.1986 23.3378 11.3812 23.1216 11.5457L21.21 13L23.9145 13.001C25.7455 13.001 27.2413 14.4358 27.339 16.2424L27.3441 16.4306V22.5713C27.3441 24.4654 25.8086 26.001 23.9145 26.001H17.7737C15.8796 26.001 14.3441 24.4654 14.3441 22.5713L14.3451 17.9601C14.0757 18.075 13.7981 18.1731 13.5133 18.2539L13.4203 18.2833C12.7863 18.4831 12.1272 18.5897 11.4487 18.6003L6.21587 18.6009C5.78662 19.4902 5.99774 20.6259 6.84742 21.2725L14.1438 26.8254C14.6772 27.2314 15.2754 27.5308 15.9117 27.7114L15.9669 27.7266L16.023 27.7452L16.0607 27.7573C16.5465 27.9105 17.0521 27.9923 17.5644 28.0003L23.6431 28.001C26.6017 28.001 29 25.5609 29 22.551V16.451C29 13.5144 26.7172 11.1203 23.8585 11.0053L23.7 11.002Z' fill='%2366BEB6'/%3E%3Cpath d='M17.344 17.0408V18.0708H20.2141C20.1059 18.9008 19.9487 19.5608 19.7521 20.0508C19.5064 20.6108 19.1329 21.1408 18.6316 21.6308C18.1893 22.0508 17.6487 22.4508 17 22.8208L17.7175 23.6408C18.8282 23.0108 19.6735 22.2808 20.2435 21.4408C20.735 20.6908 21.0692 19.7808 21.2461 18.7008C21.2658 18.5108 21.2952 18.3008 21.3247 18.0708H23.5068L23.4085 20.5908C23.379 21.2308 23.2905 21.7208 23.1333 22.0508C22.976 22.3908 22.7401 22.5708 22.4354 22.5708C22.0422 22.5708 21.5999 22.5208 21.0987 22.4208V23.4508C21.5508 23.5308 22.0029 23.5708 22.4452 23.5708C23.1824 23.5708 23.7033 23.3308 24.008 22.8508C24.2636 22.4408 24.411 21.7408 24.4503 20.7508L24.5978 17.0408H21.4034C21.423 16.5308 21.4427 15.9508 21.4525 15.3008H20.3713C20.3615 15.9308 20.3418 16.5108 20.3123 17.0408H17.344Z' fill='black'/%3E%3Cpath d='M11.3526 0C12.1335 0 12.8989 0.171546 13.5998 0.501775L13.6571 0.529361L13.6777 0.537809C14.0661 0.699688 14.4338 0.90699 14.7743 1.15601L14.8062 1.17948L14.8742 1.23086L22.1611 6.83492C23.2832 7.69788 23.2789 9.41437 22.1526 10.2716L14.8562 15.8245C14.3228 16.2304 13.7246 16.5298 13.0883 16.7105L13.0331 16.7257L12.977 16.7443L12.9393 16.7564C12.4535 16.9095 11.9479 16.9914 11.4356 16.9994L11.3567 17H5.35692C2.39834 17 0 14.5599 0 11.55V5.45C0 2.44008 2.39834 0 5.35692 0H11.3526ZM11.5704 2H5.42965C3.53551 2 2 3.53551 2 5.42965V11.5704C2 13.4645 3.53551 15 5.42965 15H11.5704C13.4645 15 15 13.4645 15 11.5704V5.42965C15 3.53551 13.4645 2 11.5704 2Z' fill='%23E06074'/%3E%3Cpath d='M7.81443 5L5 12H6.28866L6.95876 10.2451H10.0412L10.7113 12H12L9.18557 5H7.81443ZM7.31959 9.30392L8.48454 6.23529H8.52577L9.68041 9.30392H7.31959Z' fill='black'/%3E%3C/svg%3E%0A") center center transparent;
+    background-size: auto 80%;
+    width: 1.6em;
+    height: 1.6em;
+    position: absolute;
+    top: 0;
+    left: 0;
 }

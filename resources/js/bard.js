@@ -8,7 +8,6 @@ Statamic.$bard.buttons(() => {
       name: 'translate-me',
       text: 'Translate',
       command: 'classType',
-      icon: 'language',
       component: TranslateMeMenu
   };
 });
