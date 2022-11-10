@@ -16,10 +16,6 @@ class ServiceProvider extends AddonServiceProvider
         __DIR__ . '/../dist/css/translate-me.css'
     ];
 
-    protected $publishables = [
-        __DIR__.'/../dist/fonts' => 'fonts'
-    ];
-
     protected $routes = [
         'cp' => __DIR__ . '/../routes/cp.php',
     ];
