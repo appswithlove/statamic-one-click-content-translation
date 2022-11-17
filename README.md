@@ -1,70 +1,50 @@
-# Statamic Translate Me
+# One-click content translation
 
-> The addon helps translate content in the CMS automatically
+![Statamic 3.0+](https://img.shields.io/badge/Statamic-3.0+-FF269E?style=for-the-badge&link=https://statamic.com)
 
-## Features
+> With the one-click content translation addon for Statamic, translations are done in a breeze, directly in the CMS.
+> Thanks to the integration of the DeepL-API, text in any language supported by DeepL* can be instantly translated within the Statamic CMS. > Say goodbye to endless copy and pasting and experience the luxury of automatic translations for all the languages on your website.
+> 
+> One-click content translation works for (almost) all text and field types: Titles, paragraphs and even slugs. The addon automatically > detects the language to be translated and translates it into the language of the selected page you are editing in Statamic.
+> 
+> Disclaimer: The API-Limits of DeepL apply and you'll have to use your own API-Key and/or DeepL-Subscription. For the limits of the free version and subscription options, check the DeepL Website.
+> 
+> 
+> *DeepL has a list of supported languages here: https://support.deepl.com/hc/en-us/articles/360019925219-Languages-included-in-DeepL-Pro
 
-This addon does:
+## One-click content translation is a Commercial Addon.
 
-- translates text field from Default language to selected language
-- extends Bard text field
-- extends Input[type="text"] field
+You can use it for free while in development, but requires a license to use on a live site. Learn more or buy a license on [The Statamic Marketplace](https://statamic.com/addons/statamic/seo-pro)!
+
+
+## Installation
+
+1. Install One-click content translation from the `Tools > Addons` section of your control panel, or via composer:
+
+```
+composer require appswithlove/statamic-one-click-content-translation
+php artisan vendor:publish --tag="statamic-one-click-content-translation"
+```
+
+2. Set Deepl Auth Key to .env file `DEEPL_AUTH_KEY=`. 
+> To get Auth Key go to https://www.deepl.com/docs-api/api-access/authentication/
+> List of countries where Deepl is available https://www.deepl.com/pro-api
+
+Note: The addon will not work without Deepl Auth Key
+
+## Usage
+
+One-click content translation will add a special button for secondary languages into collection entry edit views.
+After click on the button the addon will translate content inside the related field from default language to selected one.
+
+## Uninstalling
+
+To uninstall, run:
+
+```
+composer remove appswithlove/statamic-one-click-content-translation
+```
 
 ## Demo
 
-demo.gif
-
-### Installation
-
-See also: https://gitlab.appswithlove.net/help/user/packages/composer_repository/index#install-a-composer-package
-
-Run:
-
-```bash
-composer config repositories.gitlab.appswithlove.net/123 '{"type": "composer", "url": "https://gitlab.appswithlove.net/api/v4/group/123/-/packages/composer/packages.json"}'
-composer config gitlab-domains gitlab.appswithlove.net
-```
-
-Create a gitlab access token with `read_api` permission:
-
--   https://gitlab.appswithlove.net/-/profile/personal_access_tokens
-
-Run
-
-```bash
-composer config gitlab-token.gitlab.appswithlove.net <personal_access_token>
-```
-
-Edit generated auth.json and add:
-
-```json5
-{
-    'gitlab-domains': ['gitlab.appswithlove.net'],
-    // ...
-}
-```
-
-And then add the addon to your project by running:
-
-```bash
-composer require appswithlove/statamic-translate-me
-php artisan vendor:publish --tag="statamic-translate-me-config"
-```
-
-Set DEEPL_AUTH_KEY= in .env file
-
-## How to Use
-
-Here's where you can explain how to use this wonderful addon.
-
-
-## How push a new version
-
-https://gitlab.appswithlove.net/help/user/packages/composer_repository/index#install-a-composer-package
-
-git add .
-git commit -m "New feature"
-git tag v1.0.1
-git push
-git push origin v1.0.1
-curl --data tag=v1.0.1 "https://__token__:<PUT_YOUR_TOKEN>@gitlab.appswithlove.net/api/v4/projects/3597/packages/composer"
+![alt text](https://github.com/appswithlove/statamic-one-click-content-translation/blob/main/demo.gif?raw=true)
