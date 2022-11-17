@@ -1,3 +1,3 @@
 import TranslateMeInputsFieldtype from './TranslateMeInputsFieldtype.vue';
 
-Statamic.$components.register('translate_me_inputs-fieldtype', TranslateMeInputsFieldtype);
+Statamic.$components.register('one_click_content_translation_inputs-fieldtype', TranslateMeInputsFieldtype);

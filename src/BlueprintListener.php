@@ -1,6 +1,6 @@
 <?php
 
-namespace Appswithlove\StatamicTranslateMe;
+namespace Appswithlove\StatamicOneClickContentTranslation;
 
 use Statamic\Events\EntryBlueprintFound;
 use Statamic\Facades\User;
@@ -18,10 +18,10 @@ class BlueprintListener
         $firstKey = array_key_first($contents['sections']);
 
         $contents['sections'][$firstKey]['fields'][] = [
-            'handle' => 'translate_me',
+            'handle' => 'one_click_content_translation',
             'field' => [
-                'display' => 'Translate Me',
-                 'type' => 'translate_me_inputs',
+                'display' => 'One-click Content Translation',
+                 'type' => 'one_click_content_translation_inputs',
                 'listable' => 'hidden',
                 'visibility' => 'hidden'
             ],

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Appswithlove\StatamicTranslateMe\Http\Controllers\TranslateMeController;
+use Appswithlove\StatamicOneClickContentTranslation\Http\Controllers\TranslateMeController;
 
 
-Route::post('/translate-me', [TranslateMeController::class, 'index']);
+Route::post('/one-click-content-translation', [TranslateMeController::class, 'index']);

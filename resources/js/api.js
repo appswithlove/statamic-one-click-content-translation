@@ -1,4 +1,4 @@
-const URL_TRANSLATE = '/cp/translate-me';
+const URL_TRANSLATE = '/cp/one-click-content-translation';
 
 export function translateMeRequest(payload) {
   return Statamic.$axios.post(URL_TRANSLATE, payload)

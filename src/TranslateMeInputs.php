@@ -1,6 +1,6 @@
 <?php
 
-namespace Appswithlove\StatamicTranslateMe;
+namespace Appswithlove\StatamicOneClickContentTranslation;
 
 use \Statamic\Fields\Fieldtype;
 

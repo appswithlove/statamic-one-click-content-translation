@@ -1,6 +1,6 @@
 <?php
 
-namespace Appswithlove\StatamicTranslateMe;
+namespace Appswithlove\StatamicOneClickContentTranslation;
 
 
 use Statamic\Providers\AddonServiceProvider;
@@ -9,11 +9,11 @@ use Statamic\Events\EntryBlueprintFound;
 class ServiceProvider extends AddonServiceProvider
 {
     protected $scripts = [
-        __DIR__ . '/../dist/js/translate-me.js',
+        __DIR__ . '/../dist/js/statamic-one-click-content-translation.js',
     ];
 
     protected $stylesheets = [
-        __DIR__ . '/../dist/css/translate-me.css'
+        __DIR__ . '/../dist/css/statamic-one-click-content-translation.css'
     ];
 
     protected $routes = [

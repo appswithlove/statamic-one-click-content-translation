@@ -1,6 +1,6 @@
 <?php
 
-namespace Appswithlove\StatamicTranslateMe\Http\Controllers;
+namespace Appswithlove\StatamicOneClickContentTranslation\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DeepL\Translator;
@@ -33,12 +33,12 @@ class TranslateMeController
     }
 
     private function translate(array $texts, string $fromLang, string $toLang) {
-        $authKey = config('statamic-translate-me.deepl_auth_key');
+        $authKey = config('statamic-one-click-content-translation.deepl_auth_key');
         $translator = new Translator($authKey);
 
         switch($toLang) {
             case 'en':
-                $toLang = config('statamic-translate-me.target_lang_for_en');
+                $toLang = config('statamic-one-click-content-translation.target_lang_for_en');
                 break;
         }
 

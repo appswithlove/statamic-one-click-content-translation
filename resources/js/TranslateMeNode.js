@@ -5,7 +5,7 @@ export default class TranslateMeNode extends Node {
 
 
   name() {
-    return 'translateMe'
+    return 'oneClickContentTranslation'
   }
 
   schema() {
