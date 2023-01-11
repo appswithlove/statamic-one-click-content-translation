@@ -16,7 +16,7 @@ Disclaimer: The API-Limits of DeepL apply and you'll have to use your own API-Ke
 
 ## One-click Content Translation is a Commercial Addon.
 
-You can use it for free while in development, but requires a license to use on a live site. Learn more or buy a license on [The Statamic Marketplace](https://statamic.com/addons/statamic/seo-pro)!
+You can use it for free while in development, but requires a license to use on a live site. Learn more or buy a license on [The Statamic Marketplace](https://statamic.com/addons/awl/deepl)!
 
 
 ## Installation
