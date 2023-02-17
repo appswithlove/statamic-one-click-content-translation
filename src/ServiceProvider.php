@@ -30,6 +30,6 @@ class ServiceProvider extends AddonServiceProvider
     {
         parent::boot();
 
-        TranslateMeInputs::register();
+        OneClickContentTranslationInputs::register();
     }
 }
