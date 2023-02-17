@@ -16,7 +16,7 @@
     mixins: [BardToolbarButton, LangMixin],
     methods: {
         translateMe() {
-            this.editor.commands.translateMe({
+            this.editor.commands.oneClickContentTranslation({
                 selectedLang: this.currentLang.lang,
                 defaultLang: this.defaultLang.lang
             })
