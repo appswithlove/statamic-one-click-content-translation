@@ -1,13 +1,12 @@
-import TranslateMeNode from './TranslateMeNode';
+import { TranslateMeNode } from './TranslateMeNode';
 import TranslateMeMenu from "./TranslateMeMenu.vue";
 
-Statamic.$bard.extend(({ node }) => node(new TranslateMeNode()));
+Statamic.$bard.addExtension(() => TranslateMeNode);
 
-Statamic.$bard.buttons(() => {
+Statamic.$bard.buttons((buttons, button) => {
   return {
-      name: 'one-click-content-translation',
+      name: 'oneClickContentTranslation',
       text: 'Translate',
-      command: 'classType',
       component: TranslateMeMenu
   };
 });

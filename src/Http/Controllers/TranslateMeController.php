@@ -34,6 +34,10 @@ class TranslateMeController
 
     private function translate(array $texts, string $fromLang, string $toLang) {
         $authKey = config('statamic-one-click-content-translation.deepl_auth_key');
+        if (!$authKey) {
+            throw new \Exception('Empty Deepl Auth Key');
+        }
+
         $translator = new Translator($authKey);
 
         switch($toLang) {

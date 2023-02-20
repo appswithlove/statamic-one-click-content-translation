@@ -1,45 +1,7 @@
 import { translateMeRequest } from './api';
 
 const { Node } = Statamic.$bard.tiptap.core;
-export default class TranslateMeNode extends Node {
-
-
-  name() {
-    return 'oneClickContentTranslation'
-  }
-
-  schema() {
-    return {
-    }
-  }
-
-  commands({ type }) {
-    return attrs => async (state, dispatch, event) => {
-
-      const textStrings = [];
-      event.dom.childNodes.forEach((node, index) => {
-        if(this.isTranslatable(node)) {
-          textStrings.push({ index, html: node.innerHTML });
-        }
-      })
-
-      const response = await translateMeRequest({
-        selectedLang: attrs.selectedLang,
-        defaultLang: attrs.defaultLang,
-        texts: textStrings
-      })
-
-      response.data.texts.forEach((text) => {
-        event.dom.childNodes[text.index].innerHTML = text.html
-      })
-    }
-}
-
-  plugins() {
-      return [];
-  }
-
-  isTranslatable(node) {
+function isTranslatable(node) {
     if(node.tagName === 'DIV') {
       return false;
     }
@@ -49,6 +11,35 @@ export default class TranslateMeNode extends Node {
     }
 
     return true;
-  }
-
 }
+
+export const TranslateMeNode = Node.create({
+    name: 'oneClickContentTranslation',
+
+    addCommands() {
+        return {
+            oneClickContentTranslation: (attrs) => async (event) => {
+                const dom = event.editor.view.dom;
+
+                const textStrings = [];
+                dom.childNodes.forEach((node, index) => {
+                    if(isTranslatable(node)) {
+                        textStrings.push({ index, html: node.innerHTML });
+                    }
+                })
+
+                const response = await translateMeRequest({
+                    selectedLang: attrs.selectedLang,
+                    defaultLang: attrs.defaultLang,
+                    texts: textStrings
+                })
+
+                response.data.texts.forEach((text) => {
+                    dom.childNodes[text.index].innerHTML = text.html;
+                })
+            }
+        };
+
+    },
+
+})
