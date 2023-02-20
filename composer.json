@@ -22,8 +22,8 @@
     },
     "extra": {
         "statamic": {
-            "name": "Translate Me",
-            "description": "Translate Me addon"
+            "name": "One-click Content Translation",
+            "description": "With the One-click Content Translation addon for Statamic, translations are done in a breeze, directly in the CMS."
         },
         "laravel": {
             "providers": [
