@@ -46,6 +46,7 @@ To uninstall, run:
 
 ```
 composer remove appswithlove/statamic-one-click-content-translation
+rm -r public/vendor/statamic-one-click-content-translation
 ```
 
 ## Demo
