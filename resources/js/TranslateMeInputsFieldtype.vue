@@ -82,7 +82,7 @@ export default {
       })
     },
     parentNode () {
-      return this.$refs.node.closest('.publish-section-wrapper').parentElement;
+      return this.$refs.node.closest('.publish-tab-outer');
     }
   }
 };

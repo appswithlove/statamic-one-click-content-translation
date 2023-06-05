@@ -13,11 +13,7 @@ class BlueprintListener
             return;
         }
 
-        $contents = $event->blueprint->contents();
-
-        $firstKey = array_key_first($contents['sections']);
-
-        $contents['sections'][$firstKey]['fields'][] = [
+        $fieldConfig = [
             'handle' => 'one_click_content_translation',
             'field' => [
                 'display' => 'One-click Content Translation',
@@ -27,6 +23,6 @@ class BlueprintListener
             ],
         ];
 
-        $event->blueprint->setContents($contents);
+        $event->blueprint->ensureField($fieldConfig['handle'], $fieldConfig['field']);
     }
 }
