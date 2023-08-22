@@ -20,7 +20,10 @@ class TranslateMeController
         try {
             $translations = $this->translate($textStrings, $data['defaultLang'], $data['selectedLang']);
         } catch (\DeepL\DeepLException $error) {
-            return response($error->getMessage(), 400);
+            return response([
+                'code'      =>  400,
+                'message'   =>  $error->getMessage()
+            ], 400);
         }
 
         $i = 0;
@@ -43,6 +46,9 @@ class TranslateMeController
         switch($toLang) {
             case 'en':
                 $toLang = config('statamic-one-click-content-translation.target_lang_for_en');
+                break;
+            case 'pt':
+                $toLang = config('statamic-one-click-content-translation.target_lang_for_pt');
                 break;
         }
 
