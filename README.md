@@ -26,6 +26,7 @@ You can use it for free while in development, but it requires a license to use o
 ```
 composer require appswithlove/statamic-one-click-content-translation
 php artisan vendor:publish --tag="statamic-one-click-content-translation"
+php artisan vendor:publish --tag="statamic-one-click-content-translation-config"
 ```
 
 2. Set Deepl Auth Key to .env file `DEEPL_AUTH_KEY=`. 

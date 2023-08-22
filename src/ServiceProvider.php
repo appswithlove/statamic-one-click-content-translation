@@ -30,6 +30,10 @@ class ServiceProvider extends AddonServiceProvider
     {
         parent::boot();
 
+        $this->publishes([
+            __DIR__.'/../config/statamic-one-click-content-translation.php' => config_path('statamic-one-click-content-translation.php'),
+        ], 'statamic-one-click-content-translation-config');
+
         OneClickContentTranslationInputs::register();
     }
 }

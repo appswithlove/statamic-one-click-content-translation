@@ -52,7 +52,9 @@ class TranslateMeController
                 break;
         }
 
-        $translations = $translator->translateText($texts, $fromLang, $toLang);
+        $sourceLang =  config('statamic-one-click-content-translation.ignore_source_lang') ? null : $fromLang;
+
+        $translations = $translator->translateText($texts, $sourceLang, $toLang);
 
         return $translations;
     }
