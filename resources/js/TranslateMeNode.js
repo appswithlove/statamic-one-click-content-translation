@@ -10,6 +10,10 @@ function isTranslatable(node) {
       return false;
     }
 
+    if(node.firstChild && node.firstChild.tagName === 'DIV') {
+        return false;
+    }
+
     return true;
 }
 
