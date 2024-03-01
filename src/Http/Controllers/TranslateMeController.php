@@ -73,16 +73,16 @@ class TranslateMeController
 
     private function googleTranslate(array $texts, string $fromLang, string $toLang)
     {
-        $credentialsPath = base_path('statamic-one-click-content-translation.google_credetials');
+        $credentialsPath = base_path(config('statamic-one-click-content-translation.google_credetials'));
         if (!$credentialsPath) {
             throw new \Exception('Empty Google Cloud credentials');
         }
 
         if (!file_exists($credentialsPath)) {
-            throw new \Exception("Can open credentials file: $credentialsPath");
+            throw new \Exception("Can't open file with credentials: $credentialsPath");
         }
 
-        $googleResourceId = base_path('statamic-one-click-content-translation.google_resource_id');
+        $googleResourceId = config('statamic-one-click-content-translation.google_resource_id');
 
         if (!$googleResourceId) {
             throw new \Exception('Google Cloud resource ID empty');
