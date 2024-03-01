@@ -3,7 +3,7 @@
 ![Statamic 3.0+](https://img.shields.io/badge/Statamic-3.0+-FF269E?style=for-the-badge&link=https://statamic.com)
 
 With the One-click Content Translation addon for Statamic, translations are done in a breeze, directly in the CMS.
-Thanks to the integration of the DeepL-API, text in any language supported by DeepL* can be instantly translated within the Statamic CMS. Say goodbye to endless copy and pasting and experience the luxury of automatic translations for the languages on your website.
+Thanks to the integration of the DeepL-API and Google Cloud API, text in any language supported by DeepL*/Google can be instantly translated within the Statamic CMS. Say goodbye to endless copy and pasting and experience the luxury of automatic translations for the languages on your website.
 
 One-click Content Translation works for (almost) all text and field types: Titles, paragraphs and even slugs. The addon automatically > detects the language to be translated and translates it into the language of the selected page you are editing in Statamic.
 
@@ -35,6 +35,13 @@ php artisan vendor:publish --tag="statamic-one-click-content-translation-config"
 > List of countries where Deepl is available https://www.deepl.com/pro-api
 
 Note: The addon will not work without Deepl Auth Key
+
+OR
+
+Set Translate Service to .env file `ONE_CLICK_CONTENT_TRANSLATION_SERVICE=google`. 
+Set Google Cloud Credetials path to .env file `ONE_CLICK_CONTENT_TRANSLATION_GOOGLE_APPLICATION_CREDENTIALS=`.
+Set Google Cloud resource ID to .env file `ONE_CLICK_CONTENT_TRANSLATION_GOOGLE_APPLICATION_ID=`.
+
 
 ## Usage
 
