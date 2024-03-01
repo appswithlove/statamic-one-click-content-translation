@@ -1,6 +1,6 @@
 # One-click Content Translation
 
-![Statamic 3.0+](https://img.shields.io/badge/Statamic-3.0+-FF269E?style=for-the-badge&link=https://statamic.com)
+![Statamic 4.0+](https://img.shields.io/badge/Statamic-3.0+-FF269E?style=for-the-badge&link=https://statamic.com)
 
 With the One-click Content Translation addon for Statamic, translations are done in a breeze, directly in the CMS.
 Thanks to the integration of the DeepL-API and Google Cloud API, text in any language supported by DeepL*/Google can be instantly translated within the Statamic CMS. Say goodbye to endless copy and pasting and experience the luxury of automatic translations for the languages on your website.
