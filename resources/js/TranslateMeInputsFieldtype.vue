@@ -6,7 +6,7 @@
 import { translateMeRequest } from './api';
 import LangMixin from './LangMixin';
 
-const CSS_QUERY = 'input[type="text"]:not([readonly]), textarea:not([readonly])';
+const CSS_QUERY = 'input[type="text"]:not([readonly]), textarea:not([readonly]), .markdown-fieldtype';
 
 export default {
   mixins: [Fieldtype, LangMixin],
@@ -30,6 +30,7 @@ export default {
 
       const parrentNode = this.parentNode();
       const inputNodes = parrentNode.querySelectorAll(CSS_QUERY);
+
       inputNodes.forEach(node => {
         const groupNode = node.closest('.form-group');
 
@@ -53,14 +54,26 @@ export default {
         labelNode.appendChild(btn);
         btn.addEventListener('click', async (event) => {
           let texts = [];
-          const isListField = groupNode.classList.contains('list-fieldtype') && groupNode?.__vue__?.$children.length;
 
-          if (!isListField && node.value.length === 0) {
+          const isListField = groupNode.classList.contains('list-fieldtype') && groupNode?.__vue__?.$children.length;
+          const isMarkdown = node.classList.contains('markdown-fieldtype');
+
+          if (!isMarkdown && !isListField && node.value?.length === 0) {
             return;
+          }
+
+          let codeMirrorNode;
+          if (isMarkdown) {
+            codeMirrorNode = node.querySelector('.CodeMirror');
+            if (!codeMirrorNode || codeMirrorNode.innerText === '') {
+              return;
+            }
           }
 
           if (isListField) {
             texts = groupNode?.__vue__?.value.map((value, index) => ({ index, html: value }));
+          } else if (isMarkdown) {
+            texts = [{ 'index': 0, html: codeMirrorNode.CodeMirror.getValue('<br>') }];
           } else {
             texts = [{ 'index': 0, html: node.value }];
           }
@@ -73,6 +86,8 @@ export default {
 
           if (isListField) {
             groupNode.__vue__.$children[0].update(response.data.texts.map((item) => item.html))
+          } else if (isMarkdown) {
+            codeMirrorNode.CodeMirror.setValue(response.data.texts[0].html.replaceAll('<br>', '\n'));
           } else {
             node.value = response.data.texts[0].html
           }
