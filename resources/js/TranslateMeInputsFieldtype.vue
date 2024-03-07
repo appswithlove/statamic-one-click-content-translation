@@ -16,6 +16,10 @@ export default {
     parentNode.addEventListener('click', () => {
       setTimeout(this.init(), 500);
     })
+
+    Statamic.$events.$on('publish-container-created', (event) => { setTimeout( () => {
+        this.init(event.$el);
+    }, 500) });
   },
   watch: {
     currentLangHandle() {
@@ -23,12 +27,16 @@ export default {
     }
   },
   methods: {
-    init() {
+    init(initialNode) {
       if (this.currentLang.lang === this.defaultLang.lang) {
         return;
       }
 
-      const parrentNode = this.parentNode();
+      let parrentNode = this.parentNode();
+      if (initialNode) {
+        parrentNode = initialNode;
+      }
+
       const inputNodes = parrentNode.querySelectorAll(CSS_QUERY);
 
       inputNodes.forEach(node => {
@@ -45,13 +53,32 @@ export default {
           return;
         }
 
-        const btn = document.createElement('button');
+        labelNode.appendChild(this.createButton(groupNode, node));
+
+        const fieldName = groupNode.classList.value.match(/(publish-field__[^ ]+)/)[1];
+        const lang = fieldName.match(/^.*_([a-z]{2})$/);
+        if (lang) {
+          labelNode.appendChild(this.createButton(groupNode, node, lang[1]));
+        }
+      })
+    },
+    parentNode () {
+      return this.$refs.node.closest('.publish-tab-outer');
+    },
+    createButton (groupNode, node, lang = null) {
+      const btn = document.createElement('button');
         btn.innerHTML = '&nbsp;';
         btn.type = 'button';
         btn.className = 'ml-1 translate-me__btn';
         btn.setAttribute('data-title', this.tooltipText);
 
-        labelNode.appendChild(btn);
+        if (lang) {
+          btn.dataset.lang = lang;
+          btn.className += ' lang-detected';
+          btn.setAttribute('data-title', this.tooltipText + ' ' + lang.toUpperCase());
+          btn.innerHTML = lang.toUpperCase();
+        }
+        
         btn.addEventListener('click', async (event) => {
           let texts = [];
 
@@ -79,7 +106,7 @@ export default {
           }
 
           const response = await translateMeRequest({
-            selectedLang: this.currentLang.lang,
+            selectedLang: lang ? lang : this.currentLang.lang,
             defaultLang: this.defaultLang.lang,
             texts: texts,
           })
@@ -94,10 +121,8 @@ export default {
           const inputEvent = new Event('input', { bubbles:true, cancelable: true });
           node.dispatchEvent(inputEvent);
         })
-      })
-    },
-    parentNode () {
-      return this.$refs.node.closest('.publish-tab-outer');
+
+        return btn;
     }
   }
 };
