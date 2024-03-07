@@ -28,10 +28,6 @@ export default {
   },
   methods: {
     init(initialNode) {
-      if (this.currentLang.lang === this.defaultLang.lang) {
-        return;
-      }
-
       let parrentNode = this.parentNode();
       if (initialNode) {
         parrentNode = initialNode;
@@ -63,7 +59,7 @@ export default {
       })
     },
     parentNode () {
-      return this.$refs.node.closest('.publish-tab-outer');
+      return this.$refs.node.closest('.publish-sections');
     },
     createButton (groupNode, node, lang = null) {
       const btn = document.createElement('button');
