@@ -52,6 +52,8 @@ After click on the button the addon will translate content inside the related fi
 
 If you have a field with language sufix, like `title_en` you will see two buttons: translate to selected language and translate to EN language.
 
+For using the functionality for `globals` or `assets` you have to add `one_click_content_translation_inputs` field to  each required blueprint.
+
 ## Uninstalling
 
 To uninstall, run:
