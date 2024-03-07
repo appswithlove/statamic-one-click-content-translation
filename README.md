@@ -50,6 +50,8 @@ Set Google Cloud resource ID to .env file `ONE_CLICK_CONTENT_TRANSLATION_GOOGLE_
 One-click Content Translation addon will add a special button for secondary languages into collection entry edit views.
 After click on the button the addon will translate content inside the related field from default language to the selected one.
 
+If you have a field with language sufix, like `title_en` you will see two buttons: translate to selected language and translate to EN language.
+
 ## Uninstalling
 
 To uninstall, run:
