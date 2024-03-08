@@ -2,28 +2,29 @@ export default {
 
   computed: {
     sites() {
-      return Statamic.$config.get('sites')
+      return Statamic.$config.get('sites') || [];
     },
     enabled() {
-      return this.sites && this.sites.length > 1
+      return this.sites && this.sites.length > 1;
     },
     disabled() {
-      return this.currentLang.lang === this.defaultLang.lang
+      return this.currentLang.lang === this.defaultLang.lang;
     },
     currentLangHandle() {
-      return this.$store.state?.publish?.base?.site
+      return this.$store.state?.publish?.base?.site;
     },
     currentLang() {
-      return this.sites.find(lang => lang.handle === this.currentLangHandle)
+      const lang = this.sites.find(lang => lang.handle === this.currentLangHandle);
+      return lang || this.sites[0];
     },
     titleCurentLang() {
-      return this.currentLang?.name
+      return this.currentLang?.name;
     },
     tooltipText() {
-      return 'Translate'
+      return 'Translate';
     },
     defaultLang() {
-      return this.sites.find(lang => lang.handle === 'default') || this.sites[0]
+      return this.sites.find(lang => lang.handle === 'default') || this.sites[0];
     },
   },
 

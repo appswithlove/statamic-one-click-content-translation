@@ -38,7 +38,7 @@ export default {
       inputNodes.forEach(node => {
         const groupNode = node.closest('.form-group');
 
-        const ignoreFieldTypes = ['grid-fieldtype'];
+        const ignoreFieldTypes = ['grid-fieldtype', 'color-fieldtype'];
         if (!groupNode || ignoreFieldTypes.some(className => groupNode.classList.contains(className))) {
           return;
         }
@@ -51,7 +51,8 @@ export default {
 
         labelNode.appendChild(this.createButton(groupNode, node));
 
-        const fieldName = groupNode.classList.value.match(/(publish-field__[^ ]+)/)[1];
+        const publishField = groupNode.classList.value.match(/(publish-field__[^ ]+)/);
+        const fieldName = publishField ? publishField[1] : '';
         const lang = fieldName.match(/^.*_([a-z]{2})$/);
         if (lang) {
           labelNode.appendChild(this.createButton(groupNode, node, lang[1]));
