@@ -10,7 +10,7 @@ return [
     'formality' => 'more',
     'target_lang_for_en' => 'en-GB',
     'target_lang_for_pt' => 'pt-PT',
-    'ignore_source_lang' => false,
+    'ignore_source_lang' => true,
 
     /*
     |--------------------------------------------------------------------------

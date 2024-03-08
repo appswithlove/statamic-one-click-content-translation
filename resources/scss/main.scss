@@ -1,10 +1,14 @@
 .translate-me__btn.translate-me__btn--bard::after {
-    width: 100%;
+    width: 30px;
     height: 100%;
     background-size: auto 70%;
 }
 .translate-me__btn.translate-me__btn--bard::before {
    display: none;
+}
+.translate-me__btn.translate-me__btn--bard.lang-detected {
+    width: 65px;
+    padding-right: 0;
 }
 .translate-me__btn {
     height: 1.6em;
@@ -72,4 +76,8 @@
     position: absolute;
     top: 0;
     left: 0;
+}
+
+.translate-me__d-flex {
+    display: flex;
 }

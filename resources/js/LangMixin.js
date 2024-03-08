@@ -8,7 +8,7 @@ export default {
       return this.sites && this.sites.length > 1;
     },
     disabled() {
-      return this.currentLang.lang === this.defaultLang.lang;
+      return false;
     },
     currentLangHandle() {
       return this.$store.state?.publish?.base?.site;
