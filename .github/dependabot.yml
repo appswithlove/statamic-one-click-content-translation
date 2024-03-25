@@ -1,0 +1,9 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    ignore:
+      - dependency-name: "vue"
+        versions: ["3.x.x"]
+      - dependency-name: "vue-loader"
+        versions: ["16.x.x"]
