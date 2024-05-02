@@ -65,8 +65,9 @@ class TranslateMeController
         }
 
         $sourceLang =  config('statamic-one-click-content-translation.ignore_source_lang') ? null : $fromLang;
+        $options = config('statamic-one-click-content-translation.deepl_options', []);
 
-        $translations = $translator->translateText($texts, $sourceLang, $toLang);
+        $translations = $translator->translateText($texts, $sourceLang, $toLang, $options);
 
         return $translations;
     }

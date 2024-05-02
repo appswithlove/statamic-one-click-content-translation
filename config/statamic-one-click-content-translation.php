@@ -5,6 +5,11 @@ return [
     'deepl_auth_key' => env('DEEPL_AUTH_KEY'),
 
     /*
+    | @param array Translation options to apply. See \DeepL\TranslateTextOptions.
+    */
+    'deepl_options' => [],
+
+    /*
      * Translate into Lang with 'less' and 'more' Formality:
      */
     'formality' => 'more',
