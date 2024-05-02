@@ -1,6 +1,7 @@
 const mix = require('laravel-mix');
 
-mix.sass('resources/scss/main.scss', 'dist/css/statamic-one-click-content-translation.css');
+mix.sass('resources/scss/main.scss', 'css/statamic-one-click-content-translation.css');
 mix
-    .js('resources/js/index.js', 'dist/js/statamic-one-click-content-translation.js')
+    .js('resources/js/index.js', 'js/statamic-one-click-content-translation.js')
+    .vue()
     .setPublicPath('dist');
