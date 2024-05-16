@@ -36,6 +36,11 @@ export default {
       const inputNodes = parrentNode.querySelectorAll(CSS_QUERY);
 
       inputNodes.forEach(node => {
+        const bardImageInlineContainer = node.closest('.bard-inline-image-container');
+        if (bardImageInlineContainer) {
+          return;
+        }
+
         const groupNode = node.closest('.form-group');
 
         const ignoreFieldTypes = ['grid-fieldtype', 'color-fieldtype'];
@@ -95,7 +100,7 @@ export default {
           }
 
           if (isListField) {
-            texts = groupNode?.__vue__?.value.map((value, index) => ({ index, html: value }));
+            texts = groupNode?.__vue__?.value.map((value, index) => ({ index, html: value || ' ' }));
           } else if (isMarkdown) {
             texts = [{ 'index': 0, html: codeMirrorNode.CodeMirror.getValue('<br>') }];
           } else {
@@ -109,7 +114,13 @@ export default {
           })
 
           if (isListField) {
-            groupNode.__vue__.$children[0].update(response.data.texts.map((item) => item.html))
+            if (typeof groupNode.__vue__.$children[0].update === 'function') {
+              // Statamic v4
+              groupNode.__vue__.$children[0].update(response.data.texts.map((item) => item.html));
+            } else {
+              // Statamic v5
+              groupNode.__vue__.value = response.data.texts.map((item) => item.html);
+            }
           } else if (isMarkdown) {
             codeMirrorNode.CodeMirror.setValue(response.data.texts[0].html.replaceAll('<br>', '\n'));
           } else {
