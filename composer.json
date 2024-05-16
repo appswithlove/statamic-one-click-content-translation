@@ -31,9 +31,9 @@
         }
     },
     "require": {
-        "php": "^8.1 || ^8.2",
+        "php": "^8.1 || ^8.2 || ^8.3 || ^8.4",
         "deeplcom/deepl-php": "^1.0",
-        "statamic/cms": "^4.0",
+        "statamic/cms": "^4.0 || ^5.2",
         "google/cloud-translate": "^1.17"
     },
     "config": {
