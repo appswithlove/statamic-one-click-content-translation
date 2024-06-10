@@ -7,7 +7,11 @@ return [
     /*
     | @param array Translation options to apply. See \DeepL\TranslateTextOptions.
     */
-    'deepl_options' => [],
+    'deepl_options' => [
+        'glossaries' => [
+            // 'statamic_site' => 'GLOSSARY_ID',
+        ],
+    ],
 
     /*
      * Translate into Lang with 'less' and 'more' Formality:

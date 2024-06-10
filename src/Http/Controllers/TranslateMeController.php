@@ -66,6 +66,8 @@ class TranslateMeController
 
         $sourceLang =  config('statamic-one-click-content-translation.ignore_source_lang') ? null : $fromLang;
         $options = config('statamic-one-click-content-translation.deepl_options', []);
+        
+        $options = $this->setGlossaryIdFromConfig($toLang, $options);
 
         $translations = $translator->translateText($texts, $sourceLang, $toLang, $options);
 
@@ -108,5 +110,41 @@ class TranslateMeController
         }
 
         return $translatedTexts;
+    }
+
+    /**
+     * If a 'glossaries' key is supplied to the DeepL-options in config, get the correct one for the Statamic site.
+     *
+     * @param string $toLang
+     * @param array $options
+     *
+     * @return array
+     */
+    private function setGlossaryIdFromConfig(string $toLang, array $options): array
+    {
+        if (array_key_exists('glossary', $options)) {
+            // If there is already a 'glossary_id' set in options, we don't want to overwrite it, do nothing and return options.
+            return $options;
+        }
+
+        if (!array_key_exists('glossaries', $options)) {
+            // If there is no 'glossaries' option defined, do nothing and return options.
+            return $options;
+        }
+
+        $glossaries = $options['glossaries'];
+        if (!array_key_exists($toLang, $glossaries)) {
+            // There is no glossary_id supplied for the current toLang, do nothing and return options.
+            return $options;
+        }
+
+        // We know there is a glossary_id for the current $toLang, set that as the glossary_id key in options.
+        $options['glossary'] = $glossaries[$toLang];
+
+        // Unset the 'glossaries' key in options since it is no longer needed.
+        unset($options['glossaries']);
+
+        // Return '$options' which now contains the correct glossary_id for the current Statamic site.
+        return $options;
     }
 }
