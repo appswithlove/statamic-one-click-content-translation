@@ -35,5 +35,8 @@
             "pixelfear/composer-dist-plugin": true,
             "php-http/discovery": true
         }
+    },
+    "require-dev": {
+        "laravel/pint": "^1.18"
     }
 }
