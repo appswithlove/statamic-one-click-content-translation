@@ -8,4 +8,4 @@ updates:
       - dependency-name: "vue"
         versions: ["3.x.x"]
       - dependency-name: "vue-loader"
-        versions: ["16.x.x", "17.x.x"]
+        versions: [">=16"]
