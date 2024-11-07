@@ -1,9 +1,10 @@
+.DS_Store
 node_modules
-vendor
-mix-manifest.json
 .env
+composer.lock
+/vendor
+.phpunit.result.cache
+.phpunit.cache
+.idea/
 
-# IDE settings
-.vscode
-.idea
-_README.md
+mix-manifest.json
