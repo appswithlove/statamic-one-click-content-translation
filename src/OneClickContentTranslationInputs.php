@@ -2,9 +2,9 @@
 
 namespace Appswithlove\StatamicOneClickContentTranslation;
 
-use \Statamic\Fields\Fieldtype;
+use Statamic\Fields\Fieldtype;
 
-class OneClickContentTranslationInputs extends Fieldtype {
-
+class OneClickContentTranslationInputs extends Fieldtype
+{
     protected $icon = 'tags';
 }

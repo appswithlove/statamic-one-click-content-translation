@@ -2,9 +2,9 @@
 
 namespace Appswithlove\StatamicOneClickContentTranslation\Http\Controllers;
 
-use Illuminate\Http\Request;
 use DeepL\Translator;
 use Google\Cloud\Translate\V3\TranslationServiceClient;
+use Illuminate\Http\Request;
 
 class TranslateMeController
 {
@@ -14,7 +14,7 @@ class TranslateMeController
         $data = $request->all();
 
         $textStrings = [];
-        foreach($data['texts'] as $text) {
+        foreach ($data['texts'] as $text) {
             $textStrings[] = $text['html'];
         }
 
@@ -24,7 +24,7 @@ class TranslateMeController
             } catch (\Error $error) {
                 return response([
                     'code'      =>  400,
-                    'message'   =>  $error->getMessage()
+                    'message'   =>  $error->getMessage(),
                 ], 400);
             }
         } else {
@@ -33,13 +33,13 @@ class TranslateMeController
             } catch (\DeepL\DeepLException $error) {
                 return response([
                     'code'      =>  400,
-                    'message'   =>  $error->getMessage()
+                    'message'   =>  $error->getMessage(),
                 ], 400);
             }
         }
 
         $i = 0;
-        foreach($data['texts'] as $text) {
+        foreach ($data['texts'] as $text) {
             $data['texts'][$i]['html'] = $translations[$i]->text;
             $i++;
         }
@@ -47,15 +47,16 @@ class TranslateMeController
         return $data;
     }
 
-    private function deeplTranslate(array $texts, string $fromLang, string $toLang) {
+    private function deeplTranslate(array $texts, string $fromLang, string $toLang)
+    {
         $authKey = config('statamic-one-click-content-translation.deepl_auth_key');
-        if (!$authKey) {
+        if (! $authKey) {
             throw new \Exception('Empty Deepl Auth Key');
         }
 
         $translator = new Translator($authKey);
 
-        switch($toLang) {
+        switch ($toLang) {
             case 'en':
                 $toLang = config('statamic-one-click-content-translation.target_lang_for_en');
                 break;
@@ -64,9 +65,9 @@ class TranslateMeController
                 break;
         }
 
-        $sourceLang =  config('statamic-one-click-content-translation.ignore_source_lang') ? null : $fromLang;
+        $sourceLang = config('statamic-one-click-content-translation.ignore_source_lang') ? null : $fromLang;
         $options = config('statamic-one-click-content-translation.deepl_options', []);
-        
+
         $options = $this->setGlossaryIdFromConfig($toLang, $options);
 
         $translations = $translator->translateText($texts, $sourceLang, $toLang, $options);
@@ -77,22 +78,22 @@ class TranslateMeController
     private function googleTranslate(array $texts, string $fromLang, string $toLang)
     {
         $credentialsPath = base_path(config('statamic-one-click-content-translation.google_credetials'));
-        if (!$credentialsPath) {
+        if (! $credentialsPath) {
             throw new \Exception('Empty Google Cloud credentials');
         }
 
-        if (!file_exists($credentialsPath)) {
+        if (! file_exists($credentialsPath)) {
             throw new \Exception("Can't open file with credentials: $credentialsPath");
         }
 
         $googleResourceId = config('statamic-one-click-content-translation.google_resource_id');
 
-        if (!$googleResourceId) {
+        if (! $googleResourceId) {
             throw new \Exception('Google Cloud resource ID empty');
         }
 
         $translationClient = new TranslationServiceClient([
-            'credentials' => $credentialsPath
+            'credentials' => $credentialsPath,
         ]);
 
         $response = $translationClient->translateText(
@@ -114,11 +115,6 @@ class TranslateMeController
 
     /**
      * If a 'glossaries' key is supplied to the DeepL-options in config, get the correct one for the Statamic site.
-     *
-     * @param string $toLang
-     * @param array $options
-     *
-     * @return array
      */
     private function setGlossaryIdFromConfig(string $toLang, array $options): array
     {
@@ -127,13 +123,13 @@ class TranslateMeController
             return $options;
         }
 
-        if (!array_key_exists('glossaries', $options)) {
+        if (! array_key_exists('glossaries', $options)) {
             // If there is no 'glossaries' option defined, do nothing and return options.
             return $options;
         }
 
         $glossaries = $options['glossaries'];
-        if (!array_key_exists($toLang, $glossaries)) {
+        if (! array_key_exists($toLang, $glossaries)) {
             // There is no glossary_id supplied for the current toLang, do nothing and return options.
             return $options;
         }

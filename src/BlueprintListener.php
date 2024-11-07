@@ -9,7 +9,7 @@ class BlueprintListener
 {
     public function handle(EntryBlueprintFound $event)
     {
-        if (!User::current()) {
+        if (! User::current()) {
             return;
         }
 
@@ -17,9 +17,9 @@ class BlueprintListener
             'handle' => 'one_click_content_translation',
             'field' => [
                 'display' => 'One-click Content Translation',
-                 'type' => 'one_click_content_translation_inputs',
+                'type' => 'one_click_content_translation_inputs',
                 'listable' => 'hidden',
-                'visibility' => 'hidden'
+                'visibility' => 'hidden',
             ],
         ];
 
