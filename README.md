@@ -1,6 +1,6 @@
 # One-click Content Translation
 
-![Statamic 4.0+](https://img.shields.io/badge/Statamic-3.0+-FF269E?style=for-the-badge&link=https://statamic.com)
+![Statamic 4.0+](https://img.shields.io/badge/Statamic-4.0+-FF269E?style=for-the-badge&link=https://statamic.com)
 
 With the One-click Content Translation addon for Statamic, translations are done in a breeze, directly within the CMS.
 Thanks to the integration of the DeepL-API or Google Cloud API, text in any language supported by DeepL/Google* can be instantly translated within the Statamic CMS. Say goodbye to endless copy and pasting and experience the luxury of automatic translations for the languages on your website.
@@ -40,7 +40,7 @@ Note: The addon will not work without a Deepl Auth Key
 OR
 
 Set Translate Service in .env file to `ONE_CLICK_CONTENT_TRANSLATION_SERVICE=google`. 
-Set Google Cloud Credetials path in .env file `ONE_CLICK_CONTENT_TRANSLATION_GOOGLE_APPLICATION_CREDENTIALS=`.
+Set Google Cloud Credentials path in .env file `ONE_CLICK_CONTENT_TRANSLATION_GOOGLE_APPLICATION_CREDENTIALS=`.
 Set Google Cloud resource ID in .env file `ONE_CLICK_CONTENT_TRANSLATION_GOOGLE_APPLICATION_ID=`.
 
 
@@ -49,7 +49,7 @@ Set Google Cloud resource ID in .env file `ONE_CLICK_CONTENT_TRANSLATION_GOOGLE_
 The One-click Content Translation addon will add a special button for secondary languages into collection entry edit views.
 After a click on the button the addon will translate content inside the related field from the default language to the selected one.
 
-If you have a field with la anguage sufix, like `title_en` you will see two buttons: translate to selected language and translate to EN language.
+If you have a field with language suffix, like `title_en` you will see two buttons: translate to selected language and translate to EN language.
 
 For using the functionality for `globals` or `assets` you have to add the `one_click_content_translation_inputs` field to  each required blueprint.
 
@@ -68,7 +68,7 @@ rm -r public/vendor/statamic-one-click-content-translation
 
 ## Google Cloud
 - Setup info can be found here: [https://cloud.google.com/translate/docs/setup](https://cloud.google.com/translate/docs/setup)
-- Page for trouble shhoting permissions problems: [https://console.cloud.google.com/iam-admin/troubleshooter](https://console.cloud.google.com/iam-admin/troubleshooter)
+- Page for troubleshooting permissions problems: [https://console.cloud.google.com/iam-admin/troubleshooter](https://console.cloud.google.com/iam-admin/troubleshooter)
 - Principal email: `client_email` from credetentials.json
 - Resource: `project_id` from credetentials.json
 - Permission: `cloudtranslate.generalModels.predict`
