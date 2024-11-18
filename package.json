@@ -16,7 +16,7 @@
     },
     "devDependencies": {
         "resolve-url-loader": "^5.0.0",
-        "sass": "^1.80.6",
+        "sass": "^1.81.0",
         "sass-loader": "^16.0.3",
         "vue-loader": "^15.10.0",
         "vue-template-compiler": "^2.7.16"
