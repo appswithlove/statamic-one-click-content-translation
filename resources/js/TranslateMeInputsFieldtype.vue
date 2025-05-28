@@ -236,8 +236,8 @@ export default {
       });
     },
 
-    setTranslatedData(fieldsData) {
-      fieldsData.forEach((field) => {
+    async setTranslatedData(fieldsData) {
+      for (const field of fieldsData) {
         const {isListField, isMarkdown, node, groupNode, codeMirrorNode, translatedHtml} = field;
         if (isListField) {
           if (typeof groupNode.__vue__.$children[0].update === 'function') {
@@ -253,12 +253,17 @@ export default {
 
         const inputEvent = new Event('input', {bubbles: true, cancelable: true});
         node.dispatchEvent(inputEvent);
-      });
+
+        await this.sleep(100);
+      }
     },
 
-    slugify(text) {
-      return text.toString().toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '')
+    sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
     },
-  }
-}
+    slugify(text) {
+      return text.toString().toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '');
+    },
+  },
+};
 </script>
