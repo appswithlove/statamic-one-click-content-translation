@@ -11,20 +11,17 @@ const CSS_QUERY = 'input[type="text"]:not([readonly]), textarea:not([readonly]),
 export default {
   mixins: [Fieldtype, LangMixin],
   mounted() {
-    document.addEventListener('DOMContentLoaded', () => {
-      this.init();
+    setTimeout(() => this.init(), 500);
+
+    const parentNode = this.parentNode();
+    parentNode.addEventListener('click', () => {
       setTimeout(() => this.init(), 500);
+    });
 
-      const parentNode = this.parentNode();
-      parentNode.addEventListener('click', () => {
-        setTimeout(() => this.init(), 500);
-      });
-
-      Statamic.$events.$on('publish-container-created', (event) => {
-        setTimeout(() => {
-          this.init(event.$el);
-        }, 500);
-      });
+    Statamic.$events.$on('publish-container-created', (event) => {
+      setTimeout(() => {
+        this.init(event.$el);
+      }, 500);
     });
   },
   watch: {
