@@ -4,6 +4,7 @@ namespace Appswithlove\StatamicOneClickContentTranslation;
 
 use Statamic\Events\EntryBlueprintFound;
 use Statamic\Providers\AddonServiceProvider;
+use Statamic\Statamic;
 
 class ServiceProvider extends AddonServiceProvider
 {
@@ -32,6 +33,12 @@ class ServiceProvider extends AddonServiceProvider
         $this->publishes([
             __DIR__.'/../config/statamic-one-click-content-translation.php' => config_path('statamic-one-click-content-translation.php'),
         ], 'statamic-one-click-content-translation-config');
+
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'statamic-one-click-content-translation');
+
+        Statamic::provideToScript([
+            'oneClickTranslation' => __('statamic-one-click-content-translation::one-click'),
+        ]);
 
         OneClickContentTranslationInputs::register();
     }
