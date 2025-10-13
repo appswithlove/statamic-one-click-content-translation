@@ -23,21 +23,20 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-
-    &.lang-detected {
-        width: 50px;
-        display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-        border-radius: 3px;
-        border: 1px solid #c5ccd4;
-
-        &::after {
-            position: relative;
-        }
-    }
 }
 
+.translate-me__btn.lang-detected {
+    width: 50px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    border-radius: 3px;
+    border: 1px solid #c5ccd4;
+}
+
+.translate-me__btn.lang-detected::after {
+    position: relative;
+}
 .translate-me__btn:focus {
     outline: none !important;
 }

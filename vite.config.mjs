@@ -12,7 +12,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         app: path.resolve('resources/js/index.js'),
-        style: path.resolve('resources/scss/main.scss'),
+        style: path.resolve('resources/css/main.css'),
       },
       output: {
         entryFileNames: 'js/statamic-one-click-content-translation.js',
