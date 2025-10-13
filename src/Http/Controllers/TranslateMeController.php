@@ -49,7 +49,7 @@ class TranslateMeController
 
     private function deeplTranslate(array $texts, string $fromLang, string $toLang)
     {
-        $authKey = config('statamic-one-click-content-translation.deepl_auth_key');
+        $authKey = config('statamic-one-click-content-translation.deepl.auth_key');
         if (! $authKey) {
             throw new \Exception('Empty Deepl Auth Key');
         }
@@ -66,7 +66,7 @@ class TranslateMeController
         }
 
         $sourceLang = config('statamic-one-click-content-translation.ignore_source_lang') ? null : $fromLang;
-        $options = config('statamic-one-click-content-translation.deepl_options', []);
+        $options = config('statamic-one-click-content-translation.deepl.glossaries', []);
 
         $options = $this->setGlossaryIdFromConfig($toLang, $options);
 
@@ -77,7 +77,7 @@ class TranslateMeController
 
     private function googleTranslate(array $texts, string $fromLang, string $toLang)
     {
-        $credentialsPath = base_path(config('statamic-one-click-content-translation.google_credetials'));
+        $credentialsPath = base_path(config('statamic-one-click-content-translation.google.auth_key'));
         if (! $credentialsPath) {
             throw new \Exception('Empty Google Cloud credentials');
         }
@@ -86,7 +86,7 @@ class TranslateMeController
             throw new \Exception("Can't open file with credentials: $credentialsPath");
         }
 
-        $googleResourceId = config('statamic-one-click-content-translation.google_resource_id');
+        $googleResourceId = config('statamic-one-click-content-translation.google.resource_id');
 
         if (! $googleResourceId) {
             throw new \Exception('Google Cloud resource ID empty');
