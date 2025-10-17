@@ -5,6 +5,7 @@ namespace Appswithlove\StatamicOneClickContentTranslation\Http\Controllers;
 use DeepL\Translator;
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 use Illuminate\Http\Request;
+use Statamic\Facades\Site;
 
 class TranslateMeController
 {
@@ -56,14 +57,8 @@ class TranslateMeController
 
         $translator = new Translator($authKey);
 
-        switch ($toLang) {
-            case 'en':
-                $toLang = config('statamic-one-click-content-translation.target_lang_for_en');
-                break;
-            case 'pt':
-                $toLang = config('statamic-one-click-content-translation.target_lang_for_pt');
-                break;
-        }
+        $site = Site::all()->firstWhere('handle', $toLang)->toArray();
+        $toLang = $site['locale'] ?? $site['lang'] ?? $toLang;
 
         $sourceLang = config('statamic-one-click-content-translation.ignore_source_lang') ? null : $fromLang;
         $options = config('statamic-one-click-content-translation.deepl.glossaries', []);
@@ -95,6 +90,9 @@ class TranslateMeController
         $translationClient = new TranslationServiceClient([
             'credentials' => $credentialsPath,
         ]);
+
+        $site = Site::all()->firstWhere('handle', $toLang)->toArray();
+        $toLang = $site['locale'] ?? $site['lang'] ?? $toLang;
 
         $response = $translationClient->translateText(
             $texts,
