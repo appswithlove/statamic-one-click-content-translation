@@ -14,7 +14,7 @@ export default {
     this.init();
     const parentNode = this.parentNode();
     parentNode.addEventListener('click', () => {
-      setTimeout(this.init(), 500);
+      setTimeout(() => this.init(), 500);
     })
 
     Statamic.$events.$on('publish-container-created', (event) => { setTimeout( () => {
@@ -65,7 +65,8 @@ export default {
       })
     },
     parentNode () {
-      return this.$refs.node.closest('.publish-sections');
+      return this.$refs.node.closest('.publish-tab-outer')
+        || this.$refs.node.closest('.publish-sections');
     },
     createButton (groupNode, node, lang = null) {
       const btn = document.createElement('button');
