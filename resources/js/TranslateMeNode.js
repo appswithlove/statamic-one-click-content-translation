@@ -1,49 +1,31 @@
 import { translateMeRequest } from './api';
 
-const { Node } = Statamic.$bard.tiptap.core;
-function isTranslatable(node) {
-    if(node.tagName === 'DIV') {
-      return false;
-    }
-
-    if(node.textContent.trim() === '') {
-      return false;
-    }
-
-    if(node.firstChild && node.firstChild.tagName === 'DIV') {
-        return false;
-    }
-
+function isTranslatable (node) {
+    if (node.nodeType !== 1) return false;
+    if (node.tagName === 'DIV') return false;
+    if (node.textContent.trim() === '') return false;
+    if (node.firstChild && node.firstChild.tagName === 'DIV') return false;
     return true;
 }
 
-export const TranslateMeNode = Node.create({
-    name: 'oneClickContentTranslation',
+export const oneClickContentTranslation = async (editor) => {
+    const dom = editor.view.dom;
+    const textStrings = [];
 
-    addCommands() {
-        return {
-            oneClickContentTranslation: (attrs) => async (event) => {
-                const dom = event.editor.view.dom;
+    dom.childNodes.forEach((node, index) => {
+        if (isTranslatable(node)) {
+            textStrings.push({ index, html: node.innerHTML });
+        }
+    });
 
-                const textStrings = [];
-                dom.childNodes.forEach((node, index) => {
-                    if(isTranslatable(node)) {
-                        textStrings.push({ index, html: node.innerHTML });
-                    }
-                })
+    const response = await translateMeRequest({
+        url: window.location.pathname,
+        texts: textStrings,
+    });
 
-                const response = await translateMeRequest({
-                    selectedLang: attrs.selectedLang,
-                    defaultLang: attrs.defaultLang,
-                    texts: textStrings
-                })
-
-                response.data.texts.forEach((text) => {
-                    dom.childNodes[text.index].innerHTML = text.html;
-                })
-            }
-        };
-
-    },
-
-})
+    response.data.texts.forEach((text) => {
+        if (dom.childNodes[text.index]) {
+            dom.childNodes[text.index].innerHTML = text.html;
+        }
+    });
+};

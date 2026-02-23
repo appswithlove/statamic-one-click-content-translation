@@ -8,7 +8,7 @@ use Google\Cloud\Translate\V3\TranslationServiceClient;
 
 class GoogleTranslator implements Translator
 {
-    public function translate(array $text, string $source, string $target): string
+    public function translate(array $text, string $source, string $target): string|array
     {
         $credentialsPath = base_path(config('statamic-one-click-content-translation.google.auth_key'));
         if (! $credentialsPath) {

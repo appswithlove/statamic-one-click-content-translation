@@ -7,7 +7,7 @@ use Appswithlove\StatamicOneClickContentTranslation\Interfaces\Translator;
 
 class DeeplTranslator implements Translator
 {
-    public function translate(array $text, string $source, string $target): string
+    public function translate(array $text, string $source, string $target): string|array
     {
         $authKey = config('statamic-one-click-content-translation.deepl.auth_key');
         if (! $authKey) {
@@ -17,6 +17,7 @@ class DeeplTranslator implements Translator
         $translator = new \DeepL\Translator($authKey);
 
         $target = GetLocaleRegion::getLocale($target);
+        $source = GetLocaleRegion::getLocale($source);
 
         $sourceLang = config('statamic-one-click-content-translation.ignore_source_lang') ? null : $source;
         $options = config('statamic-one-click-content-translation.deepl.glossaries', []);

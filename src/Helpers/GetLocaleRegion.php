@@ -10,6 +10,6 @@ class GetLocaleRegion
     {
         $site = Site::all()->firstWhere('handle', $locale)->toArray();
 
-        return $site['locale'] ?? $site['lang'] ?? $locale;
+        return str_replace('_', '-', $site['locale'] ?? $site['lang'] ?? $locale);
     }
 }
