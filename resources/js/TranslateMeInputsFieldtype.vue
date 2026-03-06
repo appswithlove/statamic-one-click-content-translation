@@ -4,12 +4,14 @@
 
 <script>
 import { translateMeRequest } from './api';
-const CSS_QUERY = 'input[type="text"]:not([readonly]), textarea:not([readonly]), .markdown-fieldtype';
+const CSS_QUERY = 'input[type="text"]:not([readonly]), textarea:not([readonly]), .markdown-fieldtype, .list-fieldtype';
 
 export default {
   mounted() {
     const el = document.querySelector('#main')
-    if (el) this.init(el)
+    setTimeout(() => {
+      if (el) this.init(el)
+    }, 2000)
   },
   methods: {
     init(el) {
@@ -58,7 +60,7 @@ export default {
 
       btn.addEventListener('click', async (event) => {
         let texts = [];
-        const isListField = groupNode.classList.contains('list-fieldtype') && groupNode?.__vue__?.$children.length;
+        const isListField = groupNode.classList.contains('list-fieldtype');
         const isMarkdown = node.classList.contains('markdown-fieldtype');
         if (!isMarkdown && !isListField && node.value?.length === 0) {
           return;
@@ -73,7 +75,9 @@ export default {
         }
 
         if (isListField) {
-          texts = groupNode?.__vue__?.value.map((value, index) => ({ index, html: value || ' ' }));
+          groupNode.querySelectorAll('input').forEach((input, index) => {
+            texts.push({index, html: input.value});
+          });
         } else if (isMarkdown) {
           texts = [{ 'index': 0, html: codeMirrorNode.CodeMirror.getValue('<br>') }];
         } else {
@@ -84,13 +88,9 @@ export default {
           texts: texts,
         })
         if (isListField) {
-          if (typeof groupNode.__vue__.$children[0].update === 'function') {
-            // Statamic v4
-            groupNode.__vue__.$children[0].update(response.data.texts.map((item) => item.html));
-          } else {
-            // Statamic v5
-            groupNode.__vue__.value = response.data.texts.map((item) => item.html);
-          }
+          groupNode.querySelectorAll('input').forEach((input, index) => {
+            input.value = response.data.texts[index].html;
+          });
         } else if (isMarkdown) {
           codeMirrorNode.CodeMirror.setValue(response.data.texts[0].html.replaceAll('<br>', '\n'));
         } else {

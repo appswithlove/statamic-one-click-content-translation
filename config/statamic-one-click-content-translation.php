@@ -5,7 +5,7 @@ return [
     | @param array Translation options to apply. See \DeepL\TranslateTextOptions.
     */
     'deepl' => [
-        'auth_key' => env('DEEPL_AUTH_KEY'),
+        'auth_key' => env('TRANSLATION_DEEPL_AUTH_KEY'),
         'glossaries' => [
             // 'statamic_site' => 'GLOSSARY_ID',
         ],
@@ -24,7 +24,7 @@ return [
     | Two options available: 'deepl' or 'google'.
     |
     */
-    'service' => env('ONE_CLICK_CONTENT_TRANSLATION_SERVICE', 'deepl'),
+    'service' => env('TRANSLATION_SERVICE', 'deepl'),
 
     /*
     |--------------------------------------------------------------------------
@@ -36,7 +36,7 @@ return [
     */
 
     'google' => [
-        'auth_key' => env('GOOGLE_AUTH_KEY'),
-        'resource_id' => env('ONE_CLICK_CONTENT_TRANSLATION_GOOGLE_APPLICATION_ID', null),
+        'auth_key' => env('TRANSLATION_GOOGLE_AUTH_KEY'),
+        'resource_id' => env('TRANSLATION_GOOGLE_APPLICATION_ID', null),
     ],
 ];

@@ -31,11 +31,19 @@ class ServiceProvider extends AddonServiceProvider
     public function register()
     {
         $this->app->bind(Translator::class, function ($app) {
+
             if (config('statamic-one-click-content-translation.service') === 'google') {
-                return new GoogleTranslator;
+                return new GoogleTranslator(
+                    base_path(config('statamic-one-click-content-translation.google.auth_key')),
+                    config('statamic-one-click-content-translation.google.resource_id')
+                );
             }
 
-            return new DeeplTranslator;
+            return new DeeplTranslator(
+                config('statamic-one-click-content-translation.deepl.auth_key'),
+                config('statamic-one-click-content-translation.ignore_source_lang'),
+                config('statamic-one-click-content-translation.deepl.glossaries', [])
+            );
         });
     }
 

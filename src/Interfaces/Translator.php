@@ -4,5 +4,5 @@ namespace Appswithlove\StatamicOneClickContentTranslation\Interfaces;
 
 interface Translator
 {
-    public function translate(array $text, string $source, string $target): string|array;
+    public function translate(array $text, string $sourceLocale, string $target): string|array;
 }

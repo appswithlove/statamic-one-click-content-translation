@@ -2,31 +2,30 @@
 
 namespace Appswithlove\StatamicOneClickContentTranslation\Services;
 
+use Appswithlove\StatamicOneClickContentTranslation\Exceptions\MissingConfigurationException;
 use Appswithlove\StatamicOneClickContentTranslation\Helpers\GetLocaleRegion;
 use Appswithlove\StatamicOneClickContentTranslation\Interfaces\Translator;
 use Google\Cloud\Translate\V3\TranslationServiceClient;
 
 class GoogleTranslator implements Translator
 {
-    public function translate(array $text, string $source, string $target): string|array
+    private string $credentialsPath;
+    private string $resourceId;
+
+    public function __construct(string $credentialsPath, string $resourceId)
     {
-        $credentialsPath = base_path(config('statamic-one-click-content-translation.google.auth_key'));
-        if (! $credentialsPath) {
-            throw new \Exception('Empty Google Cloud credentials');
-        }
+        $this->credentialsPath = $credentialsPath;
+        $this->resourceId = $resourceId;
+    }
 
-        if (! file_exists($credentialsPath)) {
-            throw new \Exception("Can't open file with credentials: $credentialsPath");
-        }
-
-        $googleResourceId = config('statamic-one-click-content-translation.google.resource_id');
-
-        if (! $googleResourceId) {
-            throw new \Exception('Google Cloud resource ID empty');
+    public function translate(array $text, string $sourceLocale, string $target): string|array
+    {
+        if (! file_exists($this->credentialsPath)) {
+            throw new MissingConfigurationException("Can't open file with credentials: {$this->credentialsPath}");
         }
 
         $translationClient = new TranslationServiceClient([
-            'credentials' => $credentialsPath,
+            'credentials' => $this->credentialsPath,
         ]);
 
         $target = GetLocaleRegion::getLocale($target);
@@ -34,7 +33,7 @@ class GoogleTranslator implements Translator
         $response = $translationClient->translateText(
             $text,
             $target,
-            TranslationServiceClient::locationName($googleResourceId, 'global'),
+            TranslationServiceClient::locationName($this->resourceId, 'global'),
             [
                 'mimeType' => 'text/html',
             ],
