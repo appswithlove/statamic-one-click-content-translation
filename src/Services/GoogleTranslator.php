@@ -5,15 +5,27 @@ namespace Appswithlove\StatamicOneClickContentTranslation\Services;
 use Appswithlove\StatamicOneClickContentTranslation\Exceptions\MissingConfigurationException;
 use Appswithlove\StatamicOneClickContentTranslation\Helpers\GetLocaleRegion;
 use Appswithlove\StatamicOneClickContentTranslation\Interfaces\Translator;
-use Google\Cloud\Translate\V3\TranslationServiceClient;
+use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
 
 class GoogleTranslator implements Translator
 {
     private string $credentialsPath;
     private string $resourceId;
 
-    public function __construct(string $credentialsPath, string $resourceId)
+    public function __construct(?string $credentialsPath, ?string $resourceId)
     {
+        if (empty($credentialsPath) || ! file_exists($credentialsPath)) {
+            throw new MissingConfigurationException(
+                "Google credentials file is missing or cannot be opened: {$credentialsPath}"
+            );
+        }
+
+        if (empty($resourceId)) {
+            throw new MissingConfigurationException(
+                'TRANSLATION_GOOGLE_APPLICATION_ID is missing'
+            );
+        }
+
         $this->credentialsPath = $credentialsPath;
         $this->resourceId = $resourceId;
     }

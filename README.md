@@ -31,7 +31,7 @@ php artisan vendor:publish --tag="statamic-one-click-content-translation"
 php artisan vendor:publish --tag="statamic-one-click-content-translation-config"
 ```
 
-2. Set Deepl Auth Key to .env file `TRANSLATION_DEEPL_AUTH_KEY=`.
+2. Set Deepl Auth Key to .env file `DEEPL_AUTH_KEY=`.
 To get an Auth Key go to [https://www.deepl.com/docs-api/api-access/authentication/](https://www.deepl.com/docs-api/api-access/authentication/)
 [List of countries where Deepl is available.](https://www.deepl.com/pro-api)
 
@@ -40,7 +40,7 @@ Note: The addon will not work without a Deepl Auth Key
 OR
 
 Set Translate Service in .env file to `ONE_CLICK_CONTENT_TRANSLATION_SERVICE=google`. 
-Set Google Cloud Auth Key in .env file `TRANSLATION_GOOGLE_AUTH_KEY=`.
+Set Google Cloud Auth Key in .env file `TRANSLATION_GOOGLE_APPLICATION_CREDENTIALS=`.
 Set Google Cloud resource ID in .env file `TRANSLATION_GOOGLE_APPLICATION_ID=`.
 
 

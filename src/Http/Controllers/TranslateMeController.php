@@ -32,7 +32,7 @@ class TranslateMeController
 
         try {
             $translations = $translator->translate($textStrings, $defaultSite->handle(), $entry->locale());
-        } catch (\Error $error) {
+        } catch (\Exception $error) {
             return response([
                 'code'      =>  400,
                 'message'   =>  $error->getMessage(),

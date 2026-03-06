@@ -34,7 +34,7 @@ class ServiceProvider extends AddonServiceProvider
 
             if (config('statamic-one-click-content-translation.service') === 'google') {
                 return new GoogleTranslator(
-                    base_path(config('statamic-one-click-content-translation.google.auth_key')),
+                    base_path(config('statamic-one-click-content-translation.google.credentials_path')),
                     config('statamic-one-click-content-translation.google.resource_id')
                 );
             }

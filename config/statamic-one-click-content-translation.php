@@ -36,7 +36,7 @@ return [
     */
 
     'google' => [
-        'auth_key' => env('TRANSLATION_GOOGLE_AUTH_KEY'),
+        'credentials_path' => env('TRANSLATION_GOOGLE_APPLICATION_CREDENTIALS'),
         'resource_id' => env('TRANSLATION_GOOGLE_APPLICATION_ID', null),
     ],
 ];

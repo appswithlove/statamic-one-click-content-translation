@@ -28,7 +28,7 @@
     "require": {
         "deeplcom/deepl-php": "^1.0",
         "statamic/cms": "^6.0",
-        "google/cloud-translate": "^1.17"
+        "google/cloud-translate": "^2.1.2"
     },
     "config": {
         "allow-plugins": {
