@@ -6,6 +6,7 @@ use Appswithlove\StatamicOneClickContentTranslation\Exceptions\MissingConfigurat
 use Appswithlove\StatamicOneClickContentTranslation\Helpers\GetLocaleRegion;
 use Appswithlove\StatamicOneClickContentTranslation\Interfaces\Translator;
 use Google\Cloud\Translate\V3\Client\TranslationServiceClient;
+use Google\Cloud\Translate\V3\TranslateTextRequest;
 
 class GoogleTranslator implements Translator
 {
@@ -42,14 +43,14 @@ class GoogleTranslator implements Translator
 
         $target = GetLocaleRegion::getLocale($target);
 
-        $response = $translationClient->translateText(
-            $text,
-            $target,
-            TranslationServiceClient::locationName($this->resourceId, 'global'),
-            [
-                'mimeType' => 'text/html',
-            ],
-        );
+        $request = new TranslateTextRequest([
+            'parent' => $translationClient->locationName($this->resourceId, 'global'),
+            'contents' => $text,
+            'target_language_code' => $target,
+            'mime_type' => 'text/html',
+        ]);
+
+        $response = $translationClient->translateText($request);
 
         $translatedTexts = [];
         foreach ($response->getTranslations() as $translation) {
