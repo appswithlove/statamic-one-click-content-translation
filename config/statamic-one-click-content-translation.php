@@ -6,7 +6,6 @@ return [
     */
     'deepl' => [
         'auth_key' => env('TRANSLATION_DEEPL_AUTH_KEY'),
-        'formality' => 'more',
         'ignore_source_lang' => true,
         'glossaries' => [
             // 'statamic_site' => 'GLOSSARY_ID',
