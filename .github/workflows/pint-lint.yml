@@ -18,4 +18,4 @@ jobs:
         with:
           testMode: true
           verboseMode: true
-          pintVersion: 1.18.0
+          pintVersion: 1.16.0

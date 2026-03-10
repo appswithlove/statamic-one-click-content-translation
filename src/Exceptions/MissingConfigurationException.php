@@ -2,4 +2,6 @@
 
 namespace Appswithlove\StatamicOneClickContentTranslation\Exceptions;
 
-class MissingConfigurationException extends \Exception {}
+class MissingConfigurationException extends \Exception {
+
+}
