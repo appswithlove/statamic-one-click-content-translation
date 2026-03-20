@@ -1,15 +1,15 @@
-## Changelog
+# Changelog
 ## 6.0.0
 ### What's New
 
 - Added support for **Statamic 6**
 - Fixed typos in the configuration file
-- Updated configuration structure
 - Updated dependencies to the latest versions
 
 ### Breaking Changes
-
-After upgrading, it is **important** to republish the configuration:
+- Dropped support for Statamic 3, 4, 5 (use Version 5 of the addon for older Statamic versions)
+- Updated configuration structure
+- After upgrading, it is **important** to republish the configuration:
 
 ```bash 
 php artisan vendor:publish --tag=statamic-one-click-content-translation-config --force
