@@ -1,40 +1,51 @@
 <template>
-  <div ref="node"></div>
+
 </template>
 
 <script>
-import { translateMeRequest } from './api';
-import LangMixin from './LangMixin';
-
-const CSS_QUERY = 'input[type="text"]:not([readonly]), textarea:not([readonly]), .markdown-fieldtype';
+import { isTranslateNeedRequest, translateMeRequest } from './api';
+const CSS_QUERY = 'input[type="text"]:not([readonly]), textarea:not([readonly]), .markdown-fieldtype, .list-fieldtype';
 
 export default {
-  mixins: [Fieldtype, LangMixin],
-  mounted(){
-    this.init();
-    const parentNode = this.parentNode();
-    parentNode.addEventListener('click', () => {
-      setTimeout(this.init(), 500);
-    })
+  async mounted() {
+    const self = this;
 
-    Statamic.$events.$on('publish-container-created', (event) => { setTimeout( () => {
-        this.init(event.$el);
-    }, 500) });
-  },
-  watch: {
-    currentLangHandle() {
-      this.init();
+    async function checkAndInit() {
+      const response = await isTranslateNeedRequest({
+        url: window.location.pathname,
+      });
+
+      if (response === true) {
+        const el = document.querySelector('#main');
+        setTimeout(() => {
+          if (el) self.init(el);
+        }, 2000);
+      }
     }
+
+    await checkAndInit();
+
+    (function() {
+      const pushState = history.pushState;
+      history.pushState = function(...args) {
+        pushState.apply(history, args);
+        window.dispatchEvent(new Event('urlchange'));
+      };
+
+      const replaceState = history.replaceState;
+      history.replaceState = function(...args) {
+        replaceState.apply(history, args);
+        window.dispatchEvent(new Event('urlchange'));
+      };
+    })();
+
+    window.addEventListener('urlchange', () => {
+      checkAndInit();
+    });
   },
   methods: {
-    init(initialNode) {
-      let parrentNode = this.parentNode();
-      if (initialNode) {
-        parrentNode = initialNode;
-      }
-
-      const inputNodes = parrentNode.querySelectorAll(CSS_QUERY);
-
+    init(el) {
+      const inputNodes = el.querySelectorAll(CSS_QUERY);
       inputNodes.forEach(node => {
         const bardImageInlineContainer = node.closest('.bard-inline-image-container');
         if (bardImageInlineContainer) {
@@ -64,73 +75,63 @@ export default {
         }
       })
     },
-    parentNode () {
-      return this.$refs.node.closest('.publish-sections');
-    },
     createButton (groupNode, node, lang = null) {
       const btn = document.createElement('button');
-        btn.innerHTML = '&nbsp;';
-        btn.type = 'button';
-        btn.className = 'ml-1 translate-me__btn';
-        btn.setAttribute('data-title', this.tooltipText);
+      btn.innerHTML = '&nbsp;';
+      btn.type = 'button';
+      btn.className = 'ml-1 translate-me__btn';
+      btn.setAttribute('data-title', 'Translate');
+      if (lang) {
+        btn.dataset.lang = lang;
+        btn.className += ' lang-detected';
+        btn.setAttribute('data-title', 'Translate ' + lang.toUpperCase());
+        btn.innerHTML = lang.toUpperCase();
+      }
 
-        if (lang) {
-          btn.dataset.lang = lang;
-          btn.className += ' lang-detected';
-          btn.setAttribute('data-title', this.tooltipText + ' ' + lang.toUpperCase());
-          btn.innerHTML = lang.toUpperCase();
+      btn.addEventListener('click', async (event) => {
+        let texts = [];
+        const isListField = groupNode.classList.contains('list-fieldtype');
+        const isMarkdown = node.classList.contains('markdown-fieldtype');
+        if (!isMarkdown && !isListField && node.value?.length === 0) {
+          return;
         }
-        
-        btn.addEventListener('click', async (event) => {
-          let texts = [];
 
-          const isListField = groupNode.classList.contains('list-fieldtype') && groupNode?.__vue__?.$children.length;
-          const isMarkdown = node.classList.contains('markdown-fieldtype');
-
-          if (!isMarkdown && !isListField && node.value?.length === 0) {
+        let codeMirrorNode;
+        if (isMarkdown) {
+          codeMirrorNode = node.querySelector('.CodeMirror');
+          if (!codeMirrorNode || codeMirrorNode.innerText === '') {
             return;
           }
+        }
 
-          let codeMirrorNode;
-          if (isMarkdown) {
-            codeMirrorNode = node.querySelector('.CodeMirror');
-            if (!codeMirrorNode || codeMirrorNode.innerText === '') {
-              return;
-            }
-          }
-
-          if (isListField) {
-            texts = groupNode?.__vue__?.value.map((value, index) => ({ index, html: value || ' ' }));
-          } else if (isMarkdown) {
-            texts = [{ 'index': 0, html: codeMirrorNode.CodeMirror.getValue('<br>') }];
-          } else {
-            texts = [{ 'index': 0, html: node.value }];
-          }
-
-          const response = await translateMeRequest({
-            selectedLang: lang ? lang : this.currentLang.lang,
-            defaultLang: this.defaultLang.lang,
-            texts: texts,
-          })
-
-          if (isListField) {
-            if (typeof groupNode.__vue__.$children[0].update === 'function') {
-              // Statamic v4
-              groupNode.__vue__.$children[0].update(response.data.texts.map((item) => item.html));
-            } else {
-              // Statamic v5
-              groupNode.__vue__.value = response.data.texts.map((item) => item.html);
-            }
-          } else if (isMarkdown) {
-            codeMirrorNode.CodeMirror.setValue(response.data.texts[0].html.replaceAll('<br>', '\n'));
-          } else {
-            node.value = response.data.texts[0].html
-          }
-          const inputEvent = new Event('input', { bubbles:true, cancelable: true });
-          node.dispatchEvent(inputEvent);
+        if (isListField) {
+          groupNode.querySelectorAll('input').forEach((input, index) => {
+            texts.push({ index, html: input.value });
+          });
+        } else if (isMarkdown) {
+          texts = [{ 'index': 0, html: codeMirrorNode.CodeMirror.getValue('<br>') }];
+        } else {
+          texts = [{ 'index': 0, html: node.value }];
+        }
+        const response = await translateMeRequest({
+          url: window.location.pathname,
+          texts: texts,
         })
 
-        return btn;
+        if (isListField) {
+          groupNode.querySelectorAll('input').forEach((input, index) => {
+            input.value = response.data.texts[index].html;
+          });
+        } else if (isMarkdown) {
+          codeMirrorNode.CodeMirror.setValue(response.data.texts[0].html.replaceAll('<br>', '\n'));
+        } else {
+          node.value = response.data.texts[0].html
+        }
+        const inputEvent = new Event('input', { bubbles: true, cancelable: true });
+        node.dispatchEvent(inputEvent);
+      })
+
+      return btn;
     }
   }
 };

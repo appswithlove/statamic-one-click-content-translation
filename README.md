@@ -31,7 +31,7 @@ php artisan vendor:publish --tag="statamic-one-click-content-translation"
 php artisan vendor:publish --tag="statamic-one-click-content-translation-config"
 ```
 
-2. Set Deepl Auth Key to .env file `DEEPL_AUTH_KEY=`.
+2. Set Deepl Auth Key to .env file `TRANSLATION_DEEPL_AUTH_KEY=`.
 To get an Auth Key go to [https://www.deepl.com/docs-api/api-access/authentication/](https://www.deepl.com/docs-api/api-access/authentication/)
 [List of countries where Deepl is available.](https://www.deepl.com/pro-api)
 
@@ -39,9 +39,9 @@ Note: The addon will not work without a Deepl Auth Key
 
 OR
 
-Set Translate Service in .env file to `ONE_CLICK_CONTENT_TRANSLATION_SERVICE=google`. 
-Set Google Cloud Credentials path in .env file `ONE_CLICK_CONTENT_TRANSLATION_GOOGLE_APPLICATION_CREDENTIALS=`.
-Set Google Cloud resource ID in .env file `ONE_CLICK_CONTENT_TRANSLATION_GOOGLE_APPLICATION_ID=`.
+Set Translate Service in .env file to `TRANSLATION_SERVICE=google`. 
+Set Google Cloud Auth Key in .env file `TRANSLATION_GOOGLE_APPLICATION_CREDENTIALS=`.
+Set Google Cloud resource ID in .env file `TRANSLATION_GOOGLE_APPLICATION_ID=`.
 
 
 ## Usage
@@ -73,3 +73,11 @@ rm -r public/vendor/statamic-one-click-content-translation
 - Resource: `project_id` from credetentials.json
 - Permission: `cloudtranslate.generalModels.predict`
 - Page for granting permissions: [https://console.cloud.google.com/iam-admin/iam](https://console.cloud.google.com/iam-admin/iam)
+
+
+## Version Compatibility
+
+| Addon Version | Supported Statamic Versions |
+|---------------|-----------------------------|
+| 6.x           | 6.x                         |
+| 5.x           | 3.x, 4.x, 5.x               |
