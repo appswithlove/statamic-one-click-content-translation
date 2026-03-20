@@ -3,15 +3,45 @@
 </template>
 
 <script>
-import { translateMeRequest } from './api';
+import { isTranslateNeedRequest, translateMeRequest } from './api';
 const CSS_QUERY = 'input[type="text"]:not([readonly]), textarea:not([readonly]), .markdown-fieldtype, .list-fieldtype';
 
 export default {
-  mounted() {
-    const el = document.querySelector('#main')
-    setTimeout(() => {
-      if (el) this.init(el)
-    }, 2000)
+  async mounted() {
+    const self = this;
+
+    async function checkAndInit() {
+      const response = await isTranslateNeedRequest({
+        url: window.location.pathname,
+      });
+
+      if (response === true) {
+        const el = document.querySelector('#main');
+        setTimeout(() => {
+          if (el) self.init(el);
+        }, 2000);
+      }
+    }
+
+    await checkAndInit();
+
+    (function() {
+      const pushState = history.pushState;
+      history.pushState = function(...args) {
+        pushState.apply(history, args);
+        window.dispatchEvent(new Event('urlchange'));
+      };
+
+      const replaceState = history.replaceState;
+      history.replaceState = function(...args) {
+        replaceState.apply(history, args);
+        window.dispatchEvent(new Event('urlchange'));
+      };
+    })();
+
+    window.addEventListener('urlchange', () => {
+      checkAndInit();
+    });
   },
   methods: {
     init(el) {
@@ -76,7 +106,7 @@ export default {
 
         if (isListField) {
           groupNode.querySelectorAll('input').forEach((input, index) => {
-            texts.push({index, html: input.value});
+            texts.push({ index, html: input.value });
           });
         } else if (isMarkdown) {
           texts = [{ 'index': 0, html: codeMirrorNode.CodeMirror.getValue('<br>') }];
@@ -87,6 +117,7 @@ export default {
           url: window.location.pathname,
           texts: texts,
         })
+
         if (isListField) {
           groupNode.querySelectorAll('input').forEach((input, index) => {
             input.value = response.data.texts[index].html;
