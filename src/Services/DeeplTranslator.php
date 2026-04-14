@@ -27,8 +27,8 @@ class DeeplTranslator implements Translator
 
         $translator = new \DeepL\Translator($this->authKey);
 
-        $target = GetLocaleRegion::getLocale($target);
-        $sourceLocale = GetLocaleRegion::getLocale($sourceLocale);
+        $target = GetLocaleRegion::getLocale($target, true);
+        $sourceLocale = GetLocaleRegion::getLocale($sourceLocale, true);
 
         $sourceLang = $this->ignoreSourceLang ? null : $sourceLocale;
 
