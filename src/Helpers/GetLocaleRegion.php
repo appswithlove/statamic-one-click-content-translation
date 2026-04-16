@@ -8,17 +8,37 @@ class GetLocaleRegion
 {
     public static function getLocale($locale, $isDeepl = false): string
     {
-        $site = Site::all()->firstWhere('handle', $locale)->toArray();
+        $site = Site::all()->firstWhere('handle', $locale)?->toArray() ?? [];
 
-        if ($isDeepl) {
-            $raw = $site['locale'] ?? $site['lang'] ?? $locale;
-            $parts = preg_split('/[_\-.]/', $raw);
-            $lang = strtolower($parts[0] ?? '');
-            $region = isset($parts[1]) ? strtoupper($parts[1]) : null;
+        $raw = $site['locale'] ?? $site['lang'] ?? $locale;
+        [$lang, $region] = self::parse($raw);
 
-            return $region ? "{$lang}-{$region}" : $lang;
-        }
+        return $isDeepl
+            ? self::forDeepl($lang, $region)
+            : self::forGoogle($lang);
+    }
 
-        return preg_split('/[_-]/', $site['locale'] ?? $site['lang'] ?? $locale)[0];
+    private static function parse(string $locale): array
+    {
+        $parts = preg_split('/[_\-.]/', $locale);
+
+        return [
+            strtolower($parts[0] ?? ''),
+            isset($parts[1]) ? strtoupper($parts[1]) : null,
+        ];
+    }
+
+    private static function forGoogle(string $lang): string
+    {
+        return $lang;
+    }
+
+    private static function forDeepl(string $lang, ?string $region): string
+    {
+        return match ($lang) {
+            'en' => 'en-'.($region ?? 'US'),
+            'pt' => 'pt-'.($region ?? 'PT'),
+            default => $lang,
+        };
     }
 }
