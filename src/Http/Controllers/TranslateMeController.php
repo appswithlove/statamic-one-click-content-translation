@@ -14,23 +14,31 @@ class TranslateMeController
         $data = $request->validate([
             'texts' => 'required|array',
             'url'   => 'required|string',
+            'lang'  => 'nullable|string',
         ]);
-        $entry = $this->getEntry($data['url']);
         $defaultSite = Site::default();
         $textStrings = [];
 
-        if (! $entry) {
-            return response([
-                'code'      =>  400,
-                'message'   =>  'no Entry found',
-            ], 400);
-        }
+        $targetLocale = $data['lang'] ?? null;
 
-        if ($entry->locale() === Site::default()->handle()) {
-            return response([
-                'code'      =>  400,
-                'message'   =>  "The default language can't be translated",
-            ], 400);
+        if (! $targetLocale) {
+            $entry = $this->getEntry($data['url']);
+
+            if (! $entry) {
+                return response([
+                    'code'      =>  400,
+                    'message'   =>  'no Entry found',
+                ], 400);
+            }
+
+            if ($entry->locale() === $defaultSite->handle()) {
+                return response([
+                    'code'      =>  400,
+                    'message'   =>  "The default language can't be translated",
+                ], 400);
+            }
+
+            $targetLocale = $entry->locale();
         }
 
         foreach ($data['texts'] as $text) {
@@ -38,7 +46,7 @@ class TranslateMeController
         }
 
         try {
-            $translations = $translator->translate($textStrings, $defaultSite->handle(), $entry->locale());
+            $translations = $translator->translate($textStrings, $defaultSite->handle(), $targetLocale);
         } catch (\Exception $e) {
             return response()->json([
                 'code'      =>  400,
