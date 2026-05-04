@@ -9,13 +9,16 @@ const CSS_QUERY = 'input[type="text"]:not([readonly]), textarea:not([readonly]),
 export default {
   async mounted() {
     const self = this;
+    let translationNeeded = false;
 
     async function checkAndInit() {
       const response = await isTranslateNeedRequest({
         url: window.location.pathname,
       });
 
-      if (response === true) {
+      translationNeeded = response === true;
+
+      if (translationNeeded) {
         const el = document.querySelector('#main');
         setTimeout(() => {
           if (el) self.init(el);
@@ -24,6 +27,18 @@ export default {
     }
 
     await checkAndInit();
+
+    const initializedEditors = new WeakSet();
+    const observer = new MutationObserver(() => {
+      if (!translationNeeded) return;
+      document.querySelectorAll('.asset-editor').forEach(assetEditor => {
+        if (!initializedEditors.has(assetEditor)) {
+          initializedEditors.add(assetEditor);
+          setTimeout(() => self.init(assetEditor), 2000);
+        }
+      });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
 
     (function() {
       const pushState = history.pushState;
@@ -65,14 +80,13 @@ export default {
           return;
         }
 
-        labelNode.appendChild(this.createButton(groupNode, node));
-
-        const publishField = groupNode.classList.value.match(/(publish-field__[^ ]+)/);
-        const fieldName = publishField ? publishField[1] : '';
-        const lang = fieldName.match(/^.*_([a-z]{2})$/);
+        const fieldHandle = (node.id || labelNode.getAttribute('for') || '').replace(/^field_/, '');
+        const lang = fieldHandle.match(/^.*_([a-z]{2})$/);
         if (lang) {
           labelNode.appendChild(this.createButton(groupNode, node, lang[1]));
         }
+
+        labelNode.appendChild(this.createButton(groupNode, node));
       })
     },
     createButton (groupNode, node, lang = null) {
@@ -116,6 +130,7 @@ export default {
         const response = await translateMeRequest({
           url: window.location.pathname,
           texts: texts,
+          ...(lang ? { lang } : {}),
         })
 
         if (isListField) {
