@@ -1,5 +1,5 @@
 {
-    "name": "appswithlove/statamic-one-click-content-translation",
+    "name": "yarre/statamic-one-click-content-translation",
     "description": "With the One-click Content Translation addon for Statamic, translations are done in a breeze, directly in the CMS.",
     "keywords": ["statamic", "translate", "cms", "deepl", "laravel", "Cloud Translation API", "google"],
     "type": "statamic-addon",
