@@ -9,9 +9,10 @@ const CSS_QUERY = 'input[type="text"]:not([readonly]), textarea:not([readonly]),
 export default {
   async mounted() {
     const self = this;
-    let translationNeeded = false;
+    let translationNeeded = true;
 
     async function checkAndInit() {
+      return;
       const response = await isTranslateNeedRequest({
         url: window.location.pathname,
       });
