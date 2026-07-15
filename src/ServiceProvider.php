@@ -50,7 +50,10 @@ class ServiceProvider extends AddonServiceProvider
             return new DeeplTranslator(
                 config('statamic-one-click-content-translation.deepl.auth_key'),
                 config('statamic-one-click-content-translation.deepl.ignore_source_lang'),
-                config('statamic-one-click-content-translation.deepl.glossaries', [])
+                array_merge(
+                    config('statamic-one-click-content-translation.deepl.glossaries', []),
+                    ['formality' => config('statamic-one-click-content-translation.deepl.formality')]
+                )
             );
         });
     }

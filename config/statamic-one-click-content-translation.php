@@ -10,6 +10,7 @@ return [
         'glossaries' => [
             // 'statamic_site' => 'GLOSSARY_ID',
         ],
+        'formality' => env('TRANSLATION_DEEPL_FORMALITY', 'default'),
     ],
 
     /*
