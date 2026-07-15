@@ -2,12 +2,14 @@
 
 namespace Appswithlove\StatamicOneClickContentTranslation;
 
+use Statamic\Events\AssetContainerBlueprintFound;
 use Statamic\Events\EntryBlueprintFound;
+use Statamic\Events\GlobalVariablesBlueprintFound;
 use Statamic\Facades\User;
 
 class BlueprintListener
 {
-    public function handle(EntryBlueprintFound $event)
+    public function handle(EntryBlueprintFound|GlobalVariablesBlueprintFound|AssetContainerBlueprintFound $event)
     {
         if (! User::current()) {
             return;

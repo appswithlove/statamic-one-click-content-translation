@@ -13,7 +13,7 @@ export default {
 
     async function checkAndInit() {
       const response = await isTranslateNeedRequest({
-        url: window.location.pathname,
+        url: window.location.pathname + window.location.search,
       });
 
       translationNeeded = response === true;
@@ -120,7 +120,7 @@ export default {
           texts = [{ 'index': 0, html: node.value }];
         }
         const response = await translateMeRequest({
-          url: window.location.pathname,
+          url: window.location.pathname + window.location.search,
           texts: texts,
           ...(lang ? { lang } : {}),
         })

@@ -5,6 +5,7 @@ namespace Appswithlove\StatamicOneClickContentTranslation\Http\Controllers;
 use Appswithlove\StatamicOneClickContentTranslation\Interfaces\Translator;
 use Illuminate\Http\Request;
 use Statamic\Facades\Entry;
+use Statamic\Facades\GlobalSet;
 use Statamic\Facades\Site;
 
 class TranslateMeController
@@ -22,23 +23,23 @@ class TranslateMeController
         $targetLocale = $data['lang'] ?? null;
 
         if (! $targetLocale) {
-            $entry = $this->getEntry($data['url']);
+            $localizable = $this->getLocalizable($data['url']);
 
-            if (! $entry) {
+            if (! $localizable) {
                 return response([
                     'code'      =>  400,
-                    'message'   =>  'no Entry found',
+                    'message'   =>  'no Entry or Global Set found',
                 ], 400);
             }
 
-            if ($entry->locale() === $defaultSite->handle()) {
+            if ($localizable->locale() === $defaultSite->handle()) {
                 return response([
                     'code'      =>  400,
                     'message'   =>  "The default language can't be translated",
                 ], 400);
             }
 
-            $targetLocale = $entry->locale();
+            $targetLocale = $localizable->locale();
         }
 
         foreach ($data['texts'] as $text) {
@@ -69,17 +70,28 @@ class TranslateMeController
             'url' => 'required|string',
         ]);
 
-        $entry = $this->getEntry($data['url']);
-        $needTranslation = $entry && $entry->locale() !== Site::default()->handle();
+        $localizable = $this->getLocalizable($data['url']);
+        $needTranslation = $localizable && $localizable->locale() !== Site::default()->handle();
 
         return response()->json(['need_translation' => $needTranslation]);
     }
 
-    private function getEntry(string $url)
+    private function getLocalizable(string $url)
     {
-        $segments = explode('/', trim($url, '/'));
+        $path = parse_url($url, PHP_URL_PATH) ?? $url;
+        $segments = explode('/', trim($path, '/'));
         $id = end($segments);
 
-        return Entry::find($id);
+        if ($entry = Entry::find($id)) {
+            return $entry;
+        }
+
+        if ($globalSet = GlobalSet::find($id)) {
+            parse_str(parse_url($url, PHP_URL_QUERY) ?? '', $query);
+
+            return $globalSet->in($query['site'] ?? Site::selected()->handle());
+        }
+
+        return null;
     }
 }

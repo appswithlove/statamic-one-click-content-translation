@@ -5,7 +5,9 @@ namespace Appswithlove\StatamicOneClickContentTranslation;
 use Appswithlove\StatamicOneClickContentTranslation\Interfaces\Translator;
 use Appswithlove\StatamicOneClickContentTranslation\Services\DeeplTranslator;
 use Appswithlove\StatamicOneClickContentTranslation\Services\GoogleTranslator;
+use Statamic\Events\AssetContainerBlueprintFound;
 use Statamic\Events\EntryBlueprintFound;
+use Statamic\Events\GlobalVariablesBlueprintFound;
 use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider
@@ -24,6 +26,12 @@ class ServiceProvider extends AddonServiceProvider
 
     protected $listen = [
         EntryBlueprintFound::class => [
+            BlueprintListener::class,
+        ],
+        GlobalVariablesBlueprintFound::class => [
+            BlueprintListener::class,
+        ],
+        AssetContainerBlueprintFound::class => [
             BlueprintListener::class,
         ],
     ];
