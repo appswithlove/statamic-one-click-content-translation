@@ -77,9 +77,20 @@ class TranslateMeController
 
     private function getEntry(string $url)
     {
+        $id = $this->parseEntryId($url);
+
+        return $id ? Entry::find($id) : null;
+    }
+
+    private function parseEntryId(string $url): ?string
+    {
         $segments = explode('/', trim($url, '/'));
         $id = end($segments);
 
-        return Entry::find($id);
+        if (! $id || in_array($id, ['null', 'undefined', 'create'], true)) {
+            return null;
+        }
+
+        return $id;
     }
 }

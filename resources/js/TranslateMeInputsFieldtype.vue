@@ -6,28 +6,81 @@
 import { isTranslateNeedRequest, translateMeRequest } from './api';
 const CSS_QUERY = 'input[type="text"]:not([readonly]), textarea:not([readonly]), .markdown-fieldtype, .list-fieldtype';
 
+function isEntryEditPath(pathname) {
+  // Match /cp/.../entries/{id} but skip create/null placeholders
+  const match = pathname.match(/\/entries\/([^/]+)\/?$/);
+  if (!match) return false;
+  const id = match[1];
+  return id !== 'create' && id !== 'null' && id !== 'undefined';
+}
+
+function ensureHistoryHooksOnce() {
+  if (window.__octHistoryHooksInstalled) {
+    return;
+  }
+
+  window.__octHistoryHooksInstalled = true;
+
+  const pushState = history.pushState;
+  history.pushState = function (...args) {
+    pushState.apply(history, args);
+    window.dispatchEvent(new Event('urlchange'));
+  };
+
+  const replaceState = history.replaceState;
+  history.replaceState = function (...args) {
+    replaceState.apply(history, args);
+    window.dispatchEvent(new Event('urlchange'));
+  };
+}
+
 export default {
   async mounted() {
     const self = this;
     let translationNeeded = false;
+    let lastCheckedPath = null;
+    let debounceTimer = null;
+    let checkSeq = 0;
 
-    async function checkAndInit() {
-      const response = await isTranslateNeedRequest({
-        url: window.location.pathname,
-      });
+    async function runCheckAndInit(trigger) {
+      const pathname = window.location.pathname;
 
+      if (!isEntryEditPath(pathname)) {
+        return;
+      }
+
+      if (pathname === lastCheckedPath && trigger === 'urlchange') {
+        return;
+      }
+
+      const seq = ++checkSeq;
+      const response = await isTranslateNeedRequest({ url: pathname });
+      if (seq !== checkSeq) return; // stale response after newer navigation
+
+      lastCheckedPath = pathname;
       translationNeeded = response === true;
 
       const el = document.querySelector('#main');
       setTimeout(() => {
-        if (el) self.init(el, translationNeeded);
+        if (el && seq === checkSeq) self.init(el, translationNeeded);
       }, 2000);
     }
 
-    await checkAndInit();
+    function checkAndInit(trigger) {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        runCheckAndInit(trigger);
+      }, trigger === 'mount' ? 0 : 250);
+    }
+
+    this._onUrlChange = () => {
+      checkAndInit('urlchange');
+    };
+
+    await runCheckAndInit('mount');
 
     const initializedEditors = new WeakSet();
-    const observer = new MutationObserver(() => {
+    this._observer = new MutationObserver(() => {
       document.querySelectorAll('.asset-editor').forEach(assetEditor => {
         if (!initializedEditors.has(assetEditor)) {
           initializedEditors.add(assetEditor);
@@ -35,25 +88,16 @@ export default {
         }
       });
     });
-    observer.observe(document.body, { childList: true, subtree: true });
+    this._observer.observe(document.body, { childList: true, subtree: true });
 
-    (function() {
-      const pushState = history.pushState;
-      history.pushState = function(...args) {
-        pushState.apply(history, args);
-        window.dispatchEvent(new Event('urlchange'));
-      };
-
-      const replaceState = history.replaceState;
-      history.replaceState = function(...args) {
-        replaceState.apply(history, args);
-        window.dispatchEvent(new Event('urlchange'));
-      };
-    })();
-
-    window.addEventListener('urlchange', () => {
-      checkAndInit();
-    });
+    ensureHistoryHooksOnce();
+    window.addEventListener('urlchange', this._onUrlChange);
+  },
+  beforeUnmount() {
+    if (this._onUrlChange) {
+      window.removeEventListener('urlchange', this._onUrlChange);
+    }
+    this._observer?.disconnect();
   },
   methods: {
     init(el, showDefaultButton = true) {
