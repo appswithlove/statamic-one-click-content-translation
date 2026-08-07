@@ -6,28 +6,63 @@
 import { isTranslateNeedRequest, translateMeRequest } from './api';
 const CSS_QUERY = 'input[type="text"]:not([readonly]), textarea:not([readonly]), .markdown-fieldtype, .list-fieldtype';
 
+let activeCheckAndInit = null;
+let checkSeq = 0;
+let urlChangeDebounceTimer = null;
+
+function patchHistoryOnce() {
+  if (window.__oneClickContentTranslationPatched) return;
+  window.__oneClickContentTranslationPatched = true;
+
+  const pushState = history.pushState;
+  history.pushState = function(...args) {
+    pushState.apply(history, args);
+    window.dispatchEvent(new Event('urlchange'));
+  };
+
+  const replaceState = history.replaceState;
+  history.replaceState = function(...args) {
+    replaceState.apply(history, args);
+    window.dispatchEvent(new Event('urlchange'));
+  };
+
+  window.addEventListener('urlchange', () => {
+    clearTimeout(urlChangeDebounceTimer);
+    urlChangeDebounceTimer = setTimeout(() => {
+      activeCheckAndInit && activeCheckAndInit();
+    }, 250);
+  });
+}
+
 export default {
   async mounted() {
     const self = this;
     let translationNeeded = false;
 
     async function checkAndInit() {
+      const seq = ++checkSeq;
       const response = await isTranslateNeedRequest({
-        url: window.location.pathname,
+        url: window.location.pathname + window.location.search,
       });
+
+      if (seq !== checkSeq) return;
 
       translationNeeded = response === true;
 
       const el = document.querySelector('#main');
       setTimeout(() => {
-        if (el) self.init(el, translationNeeded);
+        if (el && seq === checkSeq) self.init(el, translationNeeded);
       }, 2000);
     }
+
+    this.checkAndInit = checkAndInit;
+    activeCheckAndInit = checkAndInit;
+    patchHistoryOnce();
 
     await checkAndInit();
 
     const initializedEditors = new WeakSet();
-    const observer = new MutationObserver(() => {
+    this.observer = new MutationObserver(() => {
       document.querySelectorAll('.asset-editor').forEach(assetEditor => {
         if (!initializedEditors.has(assetEditor)) {
           initializedEditors.add(assetEditor);
@@ -35,25 +70,11 @@ export default {
         }
       });
     });
-    observer.observe(document.body, { childList: true, subtree: true });
-
-    (function() {
-      const pushState = history.pushState;
-      history.pushState = function(...args) {
-        pushState.apply(history, args);
-        window.dispatchEvent(new Event('urlchange'));
-      };
-
-      const replaceState = history.replaceState;
-      history.replaceState = function(...args) {
-        replaceState.apply(history, args);
-        window.dispatchEvent(new Event('urlchange'));
-      };
-    })();
-
-    window.addEventListener('urlchange', () => {
-      checkAndInit();
-    });
+    this.observer.observe(document.body, { childList: true, subtree: true });
+  },
+  beforeUnmount() {
+    if (this.observer) this.observer.disconnect();
+    if (activeCheckAndInit === this.checkAndInit) activeCheckAndInit = null;
   },
   methods: {
     init(el, showDefaultButton = true) {
@@ -120,7 +141,7 @@ export default {
           texts = [{ 'index': 0, html: node.value }];
         }
         const response = await translateMeRequest({
-          url: window.location.pathname,
+          url: window.location.pathname + window.location.search,
           texts: texts,
           ...(lang ? { lang } : {}),
         })

@@ -19,7 +19,7 @@ export const oneClickContentTranslation = async (editor) => {
     });
 
     const response = await translateMeRequest({
-        url: window.location.pathname,
+        url: window.location.pathname + window.location.search,
         texts: textStrings,
     });
 

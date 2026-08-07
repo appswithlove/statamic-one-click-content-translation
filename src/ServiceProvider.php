@@ -5,7 +5,9 @@ namespace Appswithlove\StatamicOneClickContentTranslation;
 use Appswithlove\StatamicOneClickContentTranslation\Interfaces\Translator;
 use Appswithlove\StatamicOneClickContentTranslation\Services\DeeplTranslator;
 use Appswithlove\StatamicOneClickContentTranslation\Services\GoogleTranslator;
+use Statamic\Events\AssetContainerBlueprintFound;
 use Statamic\Events\EntryBlueprintFound;
+use Statamic\Events\GlobalVariablesBlueprintFound;
 use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider
@@ -26,6 +28,12 @@ class ServiceProvider extends AddonServiceProvider
         EntryBlueprintFound::class => [
             BlueprintListener::class,
         ],
+        GlobalVariablesBlueprintFound::class => [
+            BlueprintListener::class,
+        ],
+        AssetContainerBlueprintFound::class => [
+            BlueprintListener::class,
+        ],
     ];
 
     public function register()
@@ -42,7 +50,10 @@ class ServiceProvider extends AddonServiceProvider
             return new DeeplTranslator(
                 config('statamic-one-click-content-translation.deepl.auth_key'),
                 config('statamic-one-click-content-translation.deepl.ignore_source_lang'),
-                config('statamic-one-click-content-translation.deepl.glossaries', [])
+                array_merge(
+                    config('statamic-one-click-content-translation.deepl.glossaries', []),
+                    ['formality' => config('statamic-one-click-content-translation.deepl.formality')]
+                )
             );
         });
     }
