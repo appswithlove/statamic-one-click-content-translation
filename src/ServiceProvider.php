@@ -8,7 +8,9 @@ use Appswithlove\StatamicOneClickContentTranslation\Services\GoogleTranslator;
 use Statamic\Events\AssetContainerBlueprintFound;
 use Statamic\Events\EntryBlueprintFound;
 use Statamic\Events\GlobalVariablesBlueprintFound;
+use Statamic\Facades\Site;
 use Statamic\Providers\AddonServiceProvider;
+use Statamic\Statamic;
 
 class ServiceProvider extends AddonServiceProvider
 {
@@ -67,5 +69,9 @@ class ServiceProvider extends AddonServiceProvider
         ], 'statamic-one-click-content-translation-config');
 
         OneClickContentTranslationInputs::register();
+
+        Statamic::provideToScript([
+            'oneClickContentTranslation' => fn () => ['defaultSite' => Site::default()->handle()],
+        ]);
     }
 }

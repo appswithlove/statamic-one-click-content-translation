@@ -1,4 +1,5 @@
 import { translateMeRequest } from './api';
+import { getCurrentSite } from './site';
 
 function isTranslatable (node) {
     if (node.nodeType !== 1) return false;
@@ -19,7 +20,7 @@ export const oneClickContentTranslation = async (editor) => {
     });
 
     const response = await translateMeRequest({
-        url: window.location.pathname + window.location.search,
+        target: getCurrentSite(),
         texts: textStrings,
     });
 

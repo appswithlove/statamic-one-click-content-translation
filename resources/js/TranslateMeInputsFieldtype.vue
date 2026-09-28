@@ -3,80 +3,52 @@
 </template>
 
 <script>
-import { isTranslateNeedRequest, translateMeRequest } from './api';
+import { translateMeRequest } from './api';
+import { clearCurrentSite, getCurrentSite, isTranslationNeeded, setCurrentSite } from './site';
 const CSS_QUERY = 'input[type="text"]:not([readonly]), textarea:not([readonly]), .markdown-fieldtype, .list-fieldtype';
 
-let activeCheckAndInit = null;
-let checkSeq = 0;
-let urlChangeDebounceTimer = null;
-
-function patchHistoryOnce() {
-  if (window.__oneClickContentTranslationPatched) return;
-  window.__oneClickContentTranslationPatched = true;
-
-  const pushState = history.pushState;
-  history.pushState = function(...args) {
-    pushState.apply(history, args);
-    window.dispatchEvent(new Event('urlchange'));
-  };
-
-  const replaceState = history.replaceState;
-  history.replaceState = function(...args) {
-    replaceState.apply(history, args);
-    window.dispatchEvent(new Event('urlchange'));
-  };
-
-  window.addEventListener('urlchange', () => {
-    clearTimeout(urlChangeDebounceTimer);
-    urlChangeDebounceTimer = setTimeout(() => {
-      activeCheckAndInit && activeCheckAndInit();
-    }, 250);
-  });
-}
-
 export default {
-  async mounted() {
-    const self = this;
-    let translationNeeded = false;
-
-    async function checkAndInit() {
-      const seq = ++checkSeq;
-      const response = await isTranslateNeedRequest({
-        url: window.location.pathname + window.location.search,
-      });
-
-      if (seq !== checkSeq) return;
-
-      translationNeeded = response === true;
-
-      const el = document.querySelector('#main');
-      setTimeout(() => {
-        if (el && seq === checkSeq) self.init(el, translationNeeded);
-      }, 2000);
-    }
-
-    this.checkAndInit = checkAndInit;
-    activeCheckAndInit = checkAndInit;
-    patchHistoryOnce();
-
-    await checkAndInit();
+  setup() {
+    const context = window.__STATAMIC__.ui.injectPublishContext();
+    return { publishSite: context?.site };
+  },
+  watch: {
+    publishSite(site) {
+      if (!site) return;
+      setCurrentSite(site, this);
+      this.scheduleInit();
+    },
+  },
+  mounted() {
+    if (this.publishSite) setCurrentSite(this.publishSite, this);
+    this.scheduleInit();
 
     const initializedEditors = new WeakSet();
     this.observer = new MutationObserver(() => {
       document.querySelectorAll('.asset-editor').forEach(assetEditor => {
         if (!initializedEditors.has(assetEditor)) {
           initializedEditors.add(assetEditor);
-          setTimeout(() => self.init(assetEditor, translationNeeded), 2000);
+          setTimeout(() => this.init(assetEditor, this.translationNeeded), 2000);
         }
       });
     });
     this.observer.observe(document.body, { childList: true, subtree: true });
   },
   beforeUnmount() {
+    clearTimeout(this.initTimer);
     if (this.observer) this.observer.disconnect();
-    if (activeCheckAndInit === this.checkAndInit) activeCheckAndInit = null;
+    clearCurrentSite(this);
   },
   methods: {
+    scheduleInit() {
+      this.translationNeeded = isTranslationNeeded(getCurrentSite());
+
+      clearTimeout(this.initTimer);
+      this.initTimer = setTimeout(() => {
+        const el = document.querySelector('#main');
+        if (el) this.init(el, this.translationNeeded);
+      }, 2000);
+    },
     init(el, showDefaultButton = true) {
       const inputNodes = el.querySelectorAll(CSS_QUERY);
       inputNodes.forEach(node => {
@@ -97,8 +69,11 @@ export default {
           labelNode.appendChild(this.createButton(groupNode, node, lang[1]));
         }
 
-        if (showDefaultButton && !labelNode.querySelector('.translate-me__btn:not([data-lang])')) {
+        const defaultButton = labelNode.querySelector('.translate-me__btn:not([data-lang])');
+        if (showDefaultButton && !defaultButton) {
           labelNode.appendChild(this.createButton(groupNode, node));
+        } else if (!showDefaultButton && defaultButton) {
+          defaultButton.remove();
         }
       })
     },
@@ -141,9 +116,8 @@ export default {
           texts = [{ 'index': 0, html: node.value }];
         }
         const response = await translateMeRequest({
-          url: window.location.pathname + window.location.search,
+          target: lang || getCurrentSite(),
           texts: texts,
-          ...(lang ? { lang } : {}),
         })
 
         if (isListField) {
