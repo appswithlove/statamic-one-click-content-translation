@@ -31,23 +31,28 @@ export default {
           setTimeout(() => this.init(assetEditor, this.translationNeeded), 2000);
         }
       });
+
+      clearTimeout(this.refreshTimer);
+      this.refreshTimer = setTimeout(() => this.initMain(), 300);
     });
     this.observer.observe(document.body, { childList: true, subtree: true });
   },
   beforeUnmount() {
     clearTimeout(this.initTimer);
+    clearTimeout(this.refreshTimer);
     if (this.observer) this.observer.disconnect();
     clearCurrentSite(this);
   },
   methods: {
     scheduleInit() {
+      clearTimeout(this.initTimer);
+      this.initTimer = setTimeout(() => this.initMain(), 2000);
+    },
+    initMain() {
       this.translationNeeded = isTranslationNeeded(getCurrentSite());
 
-      clearTimeout(this.initTimer);
-      this.initTimer = setTimeout(() => {
-        const el = document.querySelector('#main');
-        if (el) this.init(el, this.translationNeeded);
-      }, 2000);
+      const el = document.querySelector('#main');
+      if (el) this.init(el, this.translationNeeded);
     },
     init(el, showDefaultButton = true) {
       const inputNodes = el.querySelectorAll(CSS_QUERY);

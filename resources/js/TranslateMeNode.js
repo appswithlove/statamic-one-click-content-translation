@@ -9,7 +9,7 @@ function isTranslatable (node) {
     return true;
 }
 
-export const oneClickContentTranslation = async (editor) => {
+export const oneClickContentTranslation = async (editor, lang = null) => {
     const dom = editor.view.dom;
     const textStrings = [];
 
@@ -20,7 +20,7 @@ export const oneClickContentTranslation = async (editor) => {
     });
 
     const response = await translateMeRequest({
-        target: getCurrentSite(),
+        target: lang || getCurrentSite(),
         texts: textStrings,
     });
 
