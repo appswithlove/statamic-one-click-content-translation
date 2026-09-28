@@ -1,15 +1,14 @@
-let current = { site: null, owner: null };
+const SITE_MARKER = '[data-one-click-site]';
 
-export function getCurrentSite() {
-  return current.site;
+function baseSite() {
+  return [...document.querySelectorAll(SITE_MARKER)]
+    .find(marker => !marker.closest('.stack'))
+    ?.dataset.oneClickSite;
 }
 
-export function setCurrentSite(site, owner) {
-  current = { site, owner };
-}
-
-export function clearCurrentSite(owner) {
-  if (current.owner === owner) current = { site: null, owner: null };
+export function siteFor(el) {
+  const stackSite = el.closest('.stack')?.querySelector(SITE_MARKER)?.dataset.oneClickSite;
+  return stackSite || baseSite() || null;
 }
 
 export function isTranslationNeeded(site) {

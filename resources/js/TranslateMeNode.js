@@ -1,5 +1,5 @@
 import { translateMeRequest } from './api';
-import { getCurrentSite } from './site';
+import { siteFor } from './site';
 
 function isTranslatable (node) {
     if (node.nodeType !== 1) return false;
@@ -20,7 +20,7 @@ export const oneClickContentTranslation = async (editor, lang = null) => {
     });
 
     const response = await translateMeRequest({
-        target: lang || getCurrentSite(),
+        target: lang || siteFor(dom),
         texts: textStrings,
     });
 

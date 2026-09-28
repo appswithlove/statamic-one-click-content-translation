@@ -4,7 +4,7 @@
 
 <script>
 import { translateMeRequest } from './api';
-import { clearCurrentSite, getCurrentSite, isTranslationNeeded, setCurrentSite } from './site';
+import { isTranslationNeeded, siteFor } from './site';
 const CSS_QUERY = 'input[type="text"]:not([readonly]), textarea:not([readonly]), .markdown-fieldtype, .list-fieldtype';
 
 export default {
@@ -13,14 +13,13 @@ export default {
     return { publishSite: context?.site };
   },
   watch: {
-    publishSite(site) {
-      if (!site) return;
-      setCurrentSite(site, this);
+    publishSite() {
+      this.markSite();
       this.scheduleInit();
     },
   },
   mounted() {
-    if (this.publishSite) setCurrentSite(this.publishSite, this);
+    this.markSite();
     this.scheduleInit();
 
     const initializedEditors = new WeakSet();
@@ -33,7 +32,7 @@ export default {
       });
 
       clearTimeout(this.refreshTimer);
-      this.refreshTimer = setTimeout(() => this.initMain(), 300);
+      this.refreshTimer = setTimeout(() => this.initOwnForm(), 300);
     });
     this.observer.observe(document.body, { childList: true, subtree: true });
   },
@@ -41,22 +40,31 @@ export default {
     clearTimeout(this.initTimer);
     clearTimeout(this.refreshTimer);
     if (this.observer) this.observer.disconnect();
-    clearCurrentSite(this);
   },
   methods: {
+    markSite() {
+      const fieldNode = this.$el.parentElement;
+      if (!fieldNode) return;
+
+      if (this.publishSite) fieldNode.dataset.oneClickSite = this.publishSite;
+      else delete fieldNode.dataset.oneClickSite;
+    },
     scheduleInit() {
       clearTimeout(this.initTimer);
-      this.initTimer = setTimeout(() => this.initMain(), 2000);
+      this.initTimer = setTimeout(() => this.initOwnForm(), 2000);
     },
-    initMain() {
-      this.translationNeeded = isTranslationNeeded(getCurrentSite());
+    initOwnForm() {
+      const root = this.$el.parentElement?.closest('.stack') ?? document.querySelector('#main');
+      if (!root) return;
 
-      const el = document.querySelector('#main');
-      if (el) this.init(el, this.translationNeeded);
+      this.translationNeeded = isTranslationNeeded(siteFor(root));
+      this.init(root, this.translationNeeded);
     },
     init(el, showDefaultButton = true) {
       const inputNodes = el.querySelectorAll(CSS_QUERY);
       inputNodes.forEach(node => {
+        if (node.closest('.stack') !== el.closest('.stack')) return;
+
         const bardImageInlineContainer = node.closest('.bard-inline-image-container');
         if (bardImageInlineContainer) return;
 
@@ -121,7 +129,7 @@ export default {
           texts = [{ 'index': 0, html: node.value }];
         }
         const response = await translateMeRequest({
-          target: lang || getCurrentSite(),
+          target: lang || siteFor(groupNode),
           texts: texts,
         })
 
