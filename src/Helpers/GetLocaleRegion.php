@@ -13,9 +13,6 @@ class GetLocaleRegion
         return Site::get($handle)?->attribute(self::CUSTOM_LOCALE_ATTRIBUTE) ?: null;
     }
 
-    /**
-     * @return array{0: string, 1: ?string} [lang, region]
-     */
     public static function getLangRegion(string $handle): array
     {
         $site = Site::get($handle);
@@ -23,9 +20,6 @@ class GetLocaleRegion
         return self::parse(self::getCustomLocale($handle) ?? $site?->locale() ?? $site?->lang() ?? $handle);
     }
 
-    /**
-     * @return array{0: string, 1: ?string} [lang, region]
-     */
     private static function parse(string $locale): array
     {
         $parts = preg_split('/[_\-.]/', $locale);
