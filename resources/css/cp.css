@@ -23,19 +23,17 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-
-    &.lang-detected {
-        width: 50px;
-        display: flex;
-        margin-left: auto;
-        justify-content: space-evenly;
-        align-items: center;
-        border-radius: 3px;
-
-        &::after {
-            position: relative;
-        }
-    }
+}
+.translate-me__btn.lang-detected {
+    width: 50px;
+    display: flex;
+    margin-left: auto;
+    justify-content: space-evenly;
+    align-items: center;
+    border-radius: 3px;
+}
+.translate-me__btn.lang-detected::after {
+    position: relative;
 }
 
 .translate-me__btn:focus {

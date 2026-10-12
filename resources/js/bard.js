@@ -7,7 +7,7 @@ Statamic.booted(() => {
     buttons.push(
         {
           name: 'oneClickContentTranslation',
-          text: 'Translate',
+          text: __('statamic-one-click-content-translation::messages.translate'),
           condition: (config) => {
             fieldLang = config?.handle?.match(/^.*_([a-z]{2})$/)?.[1] ?? null;
             return true;

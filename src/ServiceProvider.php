@@ -14,12 +14,13 @@ use Statamic\Statamic;
 
 class ServiceProvider extends AddonServiceProvider
 {
-    protected $scripts = [
-        __DIR__.'/../dist/js/statamic-one-click-content-translation.js',
-    ];
-
-    protected $stylesheets = [
-        __DIR__.'/../dist/css/statamic-one-click-content-translation.css',
+    protected $vite = [
+        'input' => [
+            'resources/js/cp.js',
+            'resources/css/cp.css',
+        ],
+        'publicDirectory' => 'dist',
+        'hotFile' => __DIR__.'/../dist/hot',
     ];
 
     protected $routes = [

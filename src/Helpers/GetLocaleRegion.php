@@ -6,16 +6,18 @@ use Statamic\Facades\Site;
 
 class GetLocaleRegion
 {
-    public static function getLocale($locale, $isDeepl = false): string
+    public const CUSTOM_LOCALE_ATTRIBUTE = 'translation_locale';
+
+    public static function getCustomLocale(string $handle): ?string
     {
-        $site = Site::all()->firstWhere('handle', $locale)?->toArray() ?? [];
+        return Site::get($handle)?->attribute(self::CUSTOM_LOCALE_ATTRIBUTE) ?: null;
+    }
 
-        $raw = $site['locale'] ?? $site['lang'] ?? $locale;
-        [$lang, $region] = self::parse($raw);
+    public static function getLangRegion(string $handle): array
+    {
+        $site = Site::get($handle);
 
-        return $isDeepl
-            ? self::forDeepl($lang, $region)
-            : self::forGoogle($lang);
+        return self::parse(self::getCustomLocale($handle) ?? $site?->locale() ?? $site?->lang() ?? $handle);
     }
 
     private static function parse(string $locale): array
@@ -26,19 +28,5 @@ class GetLocaleRegion
             strtolower($parts[0] ?? ''),
             isset($parts[1]) ? strtoupper($parts[1]) : null,
         ];
-    }
-
-    private static function forGoogle(string $lang): string
-    {
-        return $lang;
-    }
-
-    private static function forDeepl(string $lang, ?string $region): string
-    {
-        return match ($lang) {
-            'en' => 'en-'.($region ?? 'US'),
-            'pt' => 'pt-'.($region ?? 'PT'),
-            default => $lang,
-        };
     }
 }

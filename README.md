@@ -53,6 +53,22 @@ If you have a field with language suffix, like `title_en` you will see two butto
 
 For using the functionality for `globals` or `assets` you have to add the `one_click_content_translation_inputs` field to  each required blueprint.
 
+### Target language
+
+The target language is taken from the site config (`resources/sites.yaml`):
+
+1. `attributes.translation_locale` – passed to the translation service as is (e.g. `en-GB`, `pt-PT`).
+2. Otherwise `locale`, `lang` or the site handle. For DeepL it is matched against the supported target languages (e.g. `pt_BR` → `PT-BR`, `de_CH` → `DE-CH`, `en` → first supported `EN-*` variant). Google uses the language part only.
+
+```yaml
+en:
+  name: English
+  url: /en
+  locale: en_US
+  attributes:
+    translation_locale: en-GB
+```
+
 ## Uninstalling
 
 To uninstall, run:

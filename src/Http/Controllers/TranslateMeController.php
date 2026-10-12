@@ -17,7 +17,7 @@ class TranslateMeController
         $defaultSite = Site::default()->handle();
 
         if ($data['target'] === $defaultSite) {
-            return response()->json(['message' => "The default language can't be translated"], 400);
+            return response()->json(['message' => __('statamic-one-click-content-translation::messages.default_language_not_translatable')], 400);
         }
 
         try {

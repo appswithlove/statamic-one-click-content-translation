@@ -18,7 +18,7 @@ class BlueprintListener
         $fieldConfig = [
             'handle' => 'one_click_content_translation',
             'field' => [
-                'display' => 'One-click Content Translation',
+                'display' => __('statamic-one-click-content-translation::messages.field_display'),
                 'type' => 'one_click_content_translation_inputs',
                 'listable' => 'hidden',
                 'visibility' => 'hidden',

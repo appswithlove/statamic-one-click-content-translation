@@ -17,13 +17,13 @@ class GoogleTranslator implements Translator
     {
         if (empty($credentialsPath) || ! file_exists($credentialsPath)) {
             throw new MissingConfigurationException(
-                "Google credentials file is missing or cannot be opened: {$credentialsPath}"
+                __('statamic-one-click-content-translation::messages.google_credentials_unreadable', ['path' => $credentialsPath])
             );
         }
 
         if (empty($resourceId)) {
             throw new MissingConfigurationException(
-                'TRANSLATION_GOOGLE_APPLICATION_ID is missing'
+                __('statamic-one-click-content-translation::messages.google_resource_id_missing')
             );
         }
 
@@ -34,14 +34,14 @@ class GoogleTranslator implements Translator
     public function translate(array $text, string $sourceLocale, string $target): string|array
     {
         if (! file_exists($this->credentialsPath)) {
-            throw new MissingConfigurationException("Can't open file with credentials: {$this->credentialsPath}");
+            throw new MissingConfigurationException(__('statamic-one-click-content-translation::messages.google_credentials_unreadable', ['path' => $this->credentialsPath]));
         }
 
         $translationClient = new TranslationServiceClient([
             'credentials' => $this->credentialsPath,
         ]);
 
-        $target = GetLocaleRegion::getLocale($target);
+        $target = GetLocaleRegion::getCustomLocale($target) ?? GetLocaleRegion::getLangRegion($target)[0];
 
         $request = new TranslateTextRequest([
             'parent' => $translationClient->locationName($this->resourceId, 'global'),

@@ -95,11 +95,11 @@ export default {
       btn.innerHTML = '&nbsp;';
       btn.type = 'button';
       btn.className = 'ml-1 translate-me__btn';
-      btn.setAttribute('data-title', 'Translate');
+      btn.setAttribute('data-title', __('statamic-one-click-content-translation::messages.translate'));
       if (lang) {
         btn.dataset.lang = lang;
         btn.className += ' lang-detected';
-        btn.setAttribute('data-title', 'Translate ' + lang.toUpperCase());
+        btn.setAttribute('data-title', __('statamic-one-click-content-translation::messages.translate_to', { lang: lang.toUpperCase() }));
         btn.innerHTML = lang.toUpperCase();
       }
 
