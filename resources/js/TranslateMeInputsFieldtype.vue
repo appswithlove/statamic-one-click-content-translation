@@ -5,6 +5,8 @@
 <script>
 import { translateMeRequest } from './api';
 import { isTranslationNeeded, siteFor } from './site';
+import { applyBardTexts, collectBardTexts } from './TranslateMeNode';
+const TRANSLATE_ALL_FIELD_TYPES = ['text-fieldtype', 'textarea-fieldtype', 'markdown-fieldtype', 'list-fieldtype'];
 const CSS_QUERY = 'input[type="text"]:not([readonly]), textarea:not([readonly]), .markdown-fieldtype, .list-fieldtype';
 
 export default {
@@ -59,6 +61,7 @@ export default {
 
       this.translationNeeded = isTranslationNeeded(siteFor(root));
       this.init(root, this.translationNeeded);
+      this.renderTranslateAllButton(root, this.translationNeeded);
     },
     init(el, showDefaultButton = true) {
       const inputNodes = el.querySelectorAll(CSS_QUERY);
@@ -103,50 +106,117 @@ export default {
         btn.innerHTML = lang.toUpperCase();
       }
 
-      btn.addEventListener('click', async (event) => {
-        let texts = [];
-        const isListField = groupNode.classList.contains('list-fieldtype');
-        const isMarkdown = node.classList.contains('markdown-fieldtype');
-        if (!isMarkdown && !isListField && node.value?.length === 0) {
-          return;
-        }
+      btn.addEventListener('click', async () => {
+        const texts = this.readTexts(groupNode, node);
+        if (!texts) return;
 
-        let codeMirrorNode;
-        if (isMarkdown) {
-          codeMirrorNode = node.querySelector('.CodeMirror');
-          if (!codeMirrorNode || codeMirrorNode.innerText === '') {
-            return;
-          }
-        }
-
-        if (isListField) {
-          groupNode.querySelectorAll('input').forEach((input, index) => {
-            texts.push({ index, html: input.value });
-          });
-        } else if (isMarkdown) {
-          texts = [{ 'index': 0, html: codeMirrorNode.CodeMirror.getValue('<br>') }];
-        } else {
-          texts = [{ 'index': 0, html: node.value }];
-        }
         const response = await translateMeRequest({
           target: lang || siteFor(groupNode),
           texts: texts,
         })
 
-        if (isListField) {
-          groupNode.querySelectorAll('input').forEach((input, index) => {
-            input.value = response.data.texts[index].html;
-          });
-        } else if (isMarkdown) {
-          codeMirrorNode.CodeMirror.setValue(response.data.texts[0].html.replaceAll('<br>', '\n'));
-        } else {
-          node.value = response.data.texts[0].html
-        }
-        const inputEvent = new Event('input', { bubbles: true, cancelable: true });
-        node.dispatchEvent(inputEvent);
+        this.writeTexts(groupNode, node, response.data.texts);
       })
 
       return btn;
+    },
+    readTexts(groupNode, node) {
+      const isListField = groupNode.classList.contains('list-fieldtype');
+      const isMarkdown = node.classList.contains('markdown-fieldtype');
+      if (!isMarkdown && !isListField && node.value?.length === 0) {
+        return null;
+      }
+
+      if (isListField) {
+        return [...groupNode.querySelectorAll('input')].map((input, index) => ({ index, html: input.value }));
+      }
+
+      if (isMarkdown) {
+        const codeMirrorNode = node.querySelector('.CodeMirror');
+        if (!codeMirrorNode || codeMirrorNode.innerText === '') {
+          return null;
+        }
+        return [{ 'index': 0, html: codeMirrorNode.CodeMirror.getValue('<br>') }];
+      }
+
+      return [{ 'index': 0, html: node.value }];
+    },
+    writeTexts(groupNode, node, texts) {
+      if (groupNode.classList.contains('list-fieldtype')) {
+        groupNode.querySelectorAll('input').forEach((input, index) => {
+          input.value = texts[index].html;
+        });
+      } else if (node.classList.contains('markdown-fieldtype')) {
+        node.querySelector('.CodeMirror').CodeMirror.setValue(texts[0].html.replaceAll('<br>', '\n'));
+      } else {
+        node.value = texts[0].html
+      }
+      const inputEvent = new Event('input', { bubbles: true, cancelable: true });
+      node.dispatchEvent(inputEvent);
+    },
+    renderTranslateAllButton(root, show) {
+      const actions = root.querySelector('header > h1 + div');
+      if (!actions) return;
+
+      const existing = actions.querySelector('.translate-me__btn--all');
+      if (!show) {
+        existing?.remove();
+        return;
+      }
+      if (existing) return;
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'translate-me__btn translate-me__btn--all';
+      btn.textContent = __('statamic-one-click-content-translation::messages.translate_all');
+      btn.addEventListener('click', async () => {
+        btn.disabled = true;
+        try {
+          await this.translateAll(root);
+        } finally {
+          btn.disabled = false;
+        }
+      });
+      actions.prepend(btn);
+    },
+    async translateAll(root) {
+      const segments = [];
+      const handledGroups = new Set();
+      const inStack = el => el.closest('.stack') === root.closest('.stack');
+
+      root.querySelectorAll(CSS_QUERY).forEach(node => {
+        if (!inStack(node) || node.closest('.bard-inline-image-container')) return;
+
+        const groupNode = node.closest('.form-group');
+        if (!groupNode || handledGroups.has(groupNode)) return;
+        if (!TRANSLATE_ALL_FIELD_TYPES.some(cls => groupNode.classList.contains(cls))) return;
+        handledGroups.add(groupNode);
+
+        const texts = this.readTexts(groupNode, node);
+        if (texts?.length) segments.push({ texts, apply: translated => this.writeTexts(groupNode, node, translated) });
+      });
+
+      root.querySelectorAll('.ProseMirror[contenteditable="true"]').forEach(dom => {
+        if (!inStack(dom)) return;
+
+        const texts = collectBardTexts(dom);
+        if (texts.length) segments.push({ texts, apply: translated => applyBardTexts(dom, translated) });
+      });
+
+      if (!segments.length) return;
+
+      const response = await translateMeRequest({
+        target: siteFor(root),
+        texts: segments.flatMap(segment => segment.texts),
+      });
+      if (!response.status) return;
+
+      let offset = 0;
+      segments.forEach(segment => {
+        const translated = response.data.texts.slice(offset, offset + segment.texts.length);
+        offset += segment.texts.length;
+        segment.apply(translated);
+      });
     }
   }
 };
