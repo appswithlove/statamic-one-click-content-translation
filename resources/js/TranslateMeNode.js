@@ -9,8 +9,7 @@ function isTranslatable (node) {
     return true;
 }
 
-export const oneClickContentTranslation = async (editor, lang = null) => {
-    const dom = editor.view.dom;
+export function collectBardTexts (dom) {
     const textStrings = [];
 
     dom.childNodes.forEach((node, index) => {
@@ -19,14 +18,24 @@ export const oneClickContentTranslation = async (editor, lang = null) => {
         }
     });
 
-    const response = await translateMeRequest({
-        target: lang || siteFor(dom),
-        texts: textStrings,
-    });
+    return textStrings;
+}
 
-    response.data.texts.forEach((text) => {
+export function applyBardTexts (dom, texts) {
+    texts.forEach((text) => {
         if (dom.childNodes[text.index]) {
             dom.childNodes[text.index].innerHTML = text.html;
         }
     });
+}
+
+export const oneClickContentTranslation = async (editor, lang = null) => {
+    const dom = editor.view.dom;
+
+    const response = await translateMeRequest({
+        target: lang || siteFor(dom),
+        texts: collectBardTexts(dom),
+    });
+
+    applyBardTexts(dom, response.data.texts);
 };

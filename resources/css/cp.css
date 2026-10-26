@@ -79,3 +79,26 @@
 .translate-me__d-flex {
     display: flex;
 }
+
+.translate-me__btn.translate-me__btn--all {
+    width: auto;
+    height: 2.25rem;
+    padding: 0 0.75rem 0 2.25rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid rgb(0 0 0 / 0.1);
+    background: white;
+}
+.translate-me__btn.translate-me__btn--all::before {
+    display: none;
+}
+.translate-me__btn.translate-me__btn--all::after {
+    width: 2.25rem;
+    height: 100%;
+    background-size: auto 50%;
+}
+.translate-me__btn.translate-me__btn--all:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
